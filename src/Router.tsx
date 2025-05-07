@@ -3,8 +3,8 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 // import Sidebar from "./Components/Sidebar";
 import App from "./App";
-import AssetDetails from "./Components/AssetDetails";
-import Assets from "./Components/Assets";
+import AssetDetails from "./features/assetsDetails/AssetDetailsPage";
+import Assets from "./features/assets/AssetsPage";
 import Statistics from "./Components/cards/Statistics";
 import Categories from "./Components/Categories";
 import Users from "./Components/Users";
@@ -28,7 +28,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "/assets",
-        element: <Assets />,
+        children: [
+          {
+            index: true,
+            element: <Assets />,
+          },
+          {
+            path: "/",
+            element: <AssetDetails />,
+          },
+        ],
       },
       {
         path: "/users",

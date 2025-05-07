@@ -255,13 +255,7 @@ export default function Assets() {
   return (
     <div className="h-full border-1 border-gray-200 shadow-xl mt-7 ml-5 mr-5">
       <div className="w-full h-15 flex justify-between border-b-2 border-b-gray-100  shadow-xl">
-        <h1 className="text-3xl mt-2 ml-4">Assets Management</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio,
-          quibusdam, nobis doloremque, ullam aliquam incidunt rem ipsam possimus
-          velit ab accusamus minus molestiae recusandae sed corporis adipisci
-          praesentium. Alias, odio!
-        </p>
+        <h1 className="text-3xl mt-2 ml-4">Assets</h1>
         <div className="relative flex items-center gap-4 mr-8 mt-3 mb-3">
           <input
             type="text"
