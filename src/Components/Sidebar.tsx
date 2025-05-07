@@ -1,8 +1,8 @@
 import { TbLayoutDashboardFilled } from "react-icons/tb";
-// import { FaUserFriends } from "react-icons/fa";
+import { FaUserFriends } from "react-icons/fa";
 // import { IoMdCheckbox } from "react-icons/io";
 // import { MdAssignmentInd } from "react-icons/md";
-// import { TbCategoryPlus } from "react-icons/tb";
+import { TbCategoryPlus } from "react-icons/tb";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { Link } from "react-router";
 
@@ -12,11 +12,23 @@ const sideLinks = [
     link: "/",
     icon: TbLayoutDashboardFilled,
   },
+  
   {
     name: "Assets",
     link: "/assets",
     icon: RiLayoutGridLine,
   },
+  {
+    name: "Categories",
+    link: "/categories",
+    icon: TbCategoryPlus ,
+  },
+  {
+    name: "Users",
+    link: "/users",
+    icon:FaUserFriends,
+  },
+ 
 ];
 const Sidebar = () => {
 

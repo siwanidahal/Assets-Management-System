@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
             element: <Assets />,
           },
           {
-            path: "/",
+            path: "/assets",
             element: <AssetDetails />,
           },
         ],
