@@ -1,54 +1,67 @@
 import { TbLayoutDashboardFilled } from "react-icons/tb";
-import { FaUserFriends } from "react-icons/fa";
-import { IoMdCheckbox } from "react-icons/io";
-import { MdAssignmentInd } from "react-icons/md";
-import { TbCategoryPlus } from "react-icons/tb";
+// import { FaUserFriends } from "react-icons/fa";
+// import { IoMdCheckbox } from "react-icons/io";
+// import { MdAssignmentInd } from "react-icons/md";
+// import { TbCategoryPlus } from "react-icons/tb";
 import { RiLayoutGridLine } from "react-icons/ri";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
+const sideLinks = [
+  {
+    name: "Dashboard",
+    link: "/",
+    icon: TbLayoutDashboardFilled,
+  },
+  {
+    name: "Assets",
+    link: "/assets",
+    icon: RiLayoutGridLine,
+  },
+];
 const Sidebar = () => {
-  const navigate = useNavigate();
 
   return (
-    <>
-      <div
-        className="w-55 h-[89vh]
-       border-1 border-gray-200 shadow-xl mt-10 ml-10 mb-10 "
-      >
-        <div className="ml-5 pt-10 mr-2">
-          <h1 className="text-2xl font-semibold">Assets Management</h1>
-          <div className="mt-10 space-y-5 cursor-pointer">
-            <div className="flex items-center gap-2 hover:bg-blue-50 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-              <TbLayoutDashboardFilled />
-              Dashboard
-            </div>
-            <div
-              onClick={() => navigate("/assets")}
-              className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 mr-6 p-1"
+    <div
+      className=" h-screen
+       border-1 border-gray-200 shadow-xl "
+    >
+      <div className=" px-4 pt-10">
+        <h1 className="text-2xl font-semibold">
+          <span className="hidden md:flex ">Assets <br /> Management</span>{" "}
+          <span className="md:hidden">AM</span>
+        </h1>
+        <div className="mt-10 flex items-center md:items-start flex-col space-y-5 cursor-pointer">
+          {sideLinks.map((l) => (
+            <Link
+              key={l.link}
+              to={l.link}
+              className="flex text-center  items-center w-fit gap-2 hover:bg-blue-50 hover:rounded-b-sm"
             >
-              <RiLayoutGridLine /> Assets
-            </div>
-            <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-              <TbCategoryPlus />
-              Categories
-            </div>
-            <div
-              onClick={() => navigate("/users")}
-              className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6"
-            >
-              <FaUserFriends />
-              Users
-            </div>
-            <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-              <MdAssignmentInd /> Assignments
-            </div>
-            <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-              <IoMdCheckbox /> Maintenance
-            </div>
+              <l.icon />
+              <span className="hidden md:flex">{l.name}</span>
+            </Link>
+          ))}
+
+          {/* <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
+            <TbCategoryPlus />
+            Categories
           </div>
+          <div
+            onClick={() => navigate("/users")}
+            className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6"
+          >
+            <FaUserFriends />
+            Users
+          </div>
+          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
+            <MdAssignmentInd /> Assignments
+          </div>
+          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
+            <IoMdCheckbox /> Maintenance
+          </div> */}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

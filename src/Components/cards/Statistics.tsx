@@ -7,9 +7,10 @@ import { PiKeyReturnBold } from "react-icons/pi";
 
 
 const Statistics = () => {
+  console.log("hello")
   return (
     <div className="p-7 ">
-      <div className="flex gap-12 ">
+      <div className="flex flex-wrap justify-center sm:justify-start gap-12 ">
         {/* Card1 */}
         <div className="w-50 border-2  border-blue-100 p-7 rounded-3xl flex items-center gap-4 shadow-2xl  bg-white hover:border-blue-700">
           <PiGridFour className="text-3xl text-blue-600" />
@@ -43,7 +44,7 @@ const Statistics = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-20 flex gap-40 ">
+      <div className="mt-20 flex flex-wrap justify-center lg:justify-start gap-40 ">
         <div className="w-fit border-2 border-blue-100  hover:border-blue-700 p-10 rounded-3xl  gap-4 shadow-2xl  bg-white">
           <h1 className="text-2xl font-semibold text-gray-800 ">
             Quick Actions

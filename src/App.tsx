@@ -1,15 +1,16 @@
 
-import AssetDetails from "./Components/AssetDetails";
-import Statistics from "./Components/cards/Statistics";
-import Categories from "./Components/Categories";
+import { Outlet } from "react-router";
+import Sidebar from "./Components/Sidebar";
 
 const App = () => {
   return (
     
-    <div>
-      <Statistics />
-      <Categories />
-      <AssetDetails />
+    <div className="flex">
+      <Sidebar/>
+      <div className="flex-1">
+
+      <Outlet/>
+      </div>
     </div>
   );
 };
