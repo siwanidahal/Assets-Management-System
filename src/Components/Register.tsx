@@ -20,6 +20,8 @@ export default function Register() {
       password2: data.get("password2"),
       first_name: data.get("first_name"),
       last_name: data.get("last_name"),
+      phone_number: data.get("phone_number"),
+      address: data.get("address"),
     };
     console.log("form data", formData);
     try {
@@ -43,8 +45,8 @@ export default function Register() {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div className="flex justify-center items-center mt-30 ">
-          <div className="w-110 h-110 shadow-2xl border-2 border-gray-100 rounded-xl ">
+        <div className="flex justify-center items-center">
+          <div className="w-120 h-180 shadow-2xl border-2 border-gray-100 rounded-xl ">
             <div className="border-b-3 border-t-3 border-radius-2xl border-t-blue-300 border-gray-200 pb-4 pt-1 mb-5 flex justify-center items-center">
               <h1>Create an Account</h1>
             </div>
@@ -73,6 +75,18 @@ export default function Register() {
                   type="text"
                   name="last_name"
                   placeholder="Enter last name"
+                />
+                <InputComp
+                  label="Address"
+                  type="text"
+                  name="address"
+                  placeholder="Enter your Address"
+                />
+                <InputComp
+                  label="Phone Number"
+                  type="number"
+                  name="phone_number"
+                  placeholder="Enter phone number"
                 />
                 <div className="relative ">
                   <InputComp
