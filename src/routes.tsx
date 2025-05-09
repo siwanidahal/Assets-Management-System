@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router";
-import Assignment from "./Components/Assignment";
+import AssetsOut from "./pages/AssetsOut";
 
 export const Routes = createBrowserRouter([
   {
-    path: "/",
-    element: <Assignment />,
+    path: "/assets-out",
+    element: <AssetsOut />,
   },
 ]);

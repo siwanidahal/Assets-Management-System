@@ -163,7 +163,7 @@ export default function AssetTable() {
       {/* Form */}
 
       {isFormOpen && (
-        <div className="bg-white justify-center shadow-4xl border overflow-hidden min-w-[400px] max-w-[800px] mx-auto p-4 mt-4">
+        <div className="bg-white justify-center shadow-4xl border-2 overflow-hidden min-w-[400px] max-w-[800px] mx-auto p-4 ">
           <h3 className="text-lg pl-80 font-semibold mb-3">Add New Record</h3>
           <div className="flex flex-wrap gap-4">
             <div className="flex-1">
@@ -252,11 +252,12 @@ export default function AssetTable() {
                 className="border p-2 rounded w-full text-sm"
               >
                 <option value="">Select Asset</option>
-                {assets.map((asset) => (
-                  <option key={asset.id} value={asset.id}>
-                    {asset.AssetCode}
-                  </option>
-                ))}
+                {Array.isArray(assets) &&
+                  assets.map((asset) => (
+                    <option key={asset.id} value={asset.id}>
+                      {asset.AssetCode}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -298,9 +299,9 @@ export default function AssetTable() {
 
       {/* Table */}
 
-      <div className="items-center px-7 py-7">
+      <div className="items-center px-7 py-7 shadow-2xl ">
         {/* min-w-full text-sm text-left text-gray-600 bg-blue-200 shadow-4xl border-3 overflow-hidden */}
-        <table className="w-full table-auto border-collapse mt-5 ">
+        <table className="w-full table-auto border-2  ">
           <thead className="bg-gray-500 text-black text-xs uppercase">
             <tr>
               <th className="px-4 py-3 border-r-2">Out To</th>
@@ -312,16 +313,20 @@ export default function AssetTable() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.id} className="border-b border-l-2 hover:bg-gray-50">
-                <td className="px-4 py-2 border-r-2">{row.OutTo}</td>
-                <td className="px-4 py-2 border-r-2">{row.Outdate}</td>
-                <td className="px-4 py-2 border-r-2">{row.DateToReturn}</td>
-                <td className="px-4 py-2 border-r-2">{row.ReturnDate}</td>
-                <td className="px-4 py-2 border-r-2">{row.AssetDetail}</td>
-                <td className="px-4 py-2 border-r-2">{row.Remarks}</td>
-              </tr>
-            ))}
+            {Array.isArray(rows) &&
+              rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className="border-b border-l-2 hover:bg-gray-50"
+                >
+                  <td className="px-4 py-2 border-r-2">{row.OutTo}</td>
+                  <td className="px-4 py-2 border-r-2">{row.Outdate}</td>
+                  <td className="px-4 py-2 border-r-2">{row.DateToReturn}</td>
+                  <td className="px-4 py-2 border-r-2">{row.ReturnDate}</td>
+                  <td className="px-4 py-2 border-r-2">{row.AssetDetail}</td>
+                  <td className="px-4 py-2 border-r-2">{row.Remarks}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
