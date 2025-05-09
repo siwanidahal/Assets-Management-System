@@ -68,7 +68,6 @@ export default function Assets() {
       Asset: {
         AssetName: formData.Asset,
       },
-      Info:formData.Info
     };
     setAssetData((prev) => [...prev, newAsset]);
 
