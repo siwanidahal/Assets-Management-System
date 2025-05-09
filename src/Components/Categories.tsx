@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 interface Category {
-  id: number| string;
+  id: number | string;
   name: string;
 }
 
@@ -9,7 +9,7 @@ export default function Categories() {
   const [showForm, setShowForm] = useState(false);
   const [categoryData, setCategoryData] = useState<Category[]>([]);
   const [formData, setFormData] = useState<Category>({
-    id:"" ,
+    id: "",
     name: "",
   });
 
@@ -34,7 +34,7 @@ export default function Categories() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: name === "id" ? (value) : value });
+    setFormData({ ...formData, [name]: name === "id" ? value : value });
   };
   const handleSubmit = () => {
     if (!formData.id || !formData.name) {
@@ -47,18 +47,23 @@ export default function Categories() {
     };
     setCategoryData((prev) => [...prev, newCategory]);
 
-    setFormData({ id:0, name: "" });
+    setFormData({ id: 0, name: "" });
 
     setShowForm(false);
   };
 
   return (
-    <div className="h-full border border-gray-200 shadow-xl mt-7 mx-5  ">
     
-      <div className="flex justify-between border-b-2 shadow-xl p-4 " >
+    <div className="h-full border border-gray-200 shadow-xl mt-7 mx-5  ">      
+      <div className="flex justify-between border-b-2 shadow-xl p-4 ">
         <div className="flex gap-100 w-fit">
-        <h1 className="text-3xl">Categories</h1>
-          <input type="text" placeholder="Search" className="border pl-5 text-lg pt-1 items-end"/>
+          <h1 className="text-3xl">Categories</h1>
+          
+          <input
+            type="text"
+            placeholder="Search"
+            className="border pl-5 text-lg pt-1 items-end"
+          />
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -86,7 +91,10 @@ export default function Categories() {
             className="border-2 p-1"
             onChange={handleInputChange}
           />
-          <button onClick={handleSubmit} className="text-white bg-blue-500 px-4 py-1 rounded-2xl">
+          <button
+            onClick={handleSubmit}
+            className="text-white bg-blue-500 px-4 py-1 rounded-2xl"
+          >
             Submit
           </button>
         </div>
@@ -97,16 +105,16 @@ export default function Categories() {
         <h1>Name</h1>
       </div>
 
-      { Array.isArray(categoryData) &&categoryData.map((category,index) => (
-        <div
-          key={index}
-          className="flex gap-10 pl-3 py-3 border-b border-blue-100 bg-white hover:bg-blue-50"
-        >
-          <p>{category.id}</p>
-          <p>{category.name}</p>
-        </div>
-      ))}
+      {Array.isArray(categoryData) &&
+        categoryData.map((category, index) => (
+          <div
+            key={index}
+            className="flex gap-10 pl-3 py-3 border-b border-blue-100 bg-white hover:bg-blue-50"
+          >
+            <p>{category.id}</p>
+            <p>{category.name}</p>
+          </div>
+        ))}
     </div>
   );
 }
-
