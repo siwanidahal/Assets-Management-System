@@ -4,17 +4,20 @@ import { RiAddFill } from "react-icons/ri";
 import { BsPersonFill } from "react-icons/bs";
 import { HiDocumentReport } from "react-icons/hi";
 import { PiKeyReturnBold } from "react-icons/pi";
-
+import Navbar from "./Navbar";
 
 const Statistics = () => {
-  console.log("hello")
+  console.log("hello");
   return (
-    <div className="p-7 ">
+    <div className="">
+      <div className="mb-10">
+        <Navbar />
+      </div>
       <div className="flex flex-wrap justify-center sm:justify-start gap-12 ">
         {/* Card1 */}
         <div className="w-50 border-2  border-blue-100 p-7 rounded-3xl flex items-center gap-4 shadow-2xl  bg-white hover:border-blue-700">
           <PiGridFour className="text-3xl text-blue-600" />
-          <div >
+          <div>
             <h1 className="text-lg font-semibold text-gray-800 ">
               Total Assets
             </h1>
@@ -80,8 +83,8 @@ const Statistics = () => {
                 <p className="text-sm text-gray-400">5 min ago</p>
               </div>
             </li>
-            <li className="flex items-center gap-3" >
-              <PiKeyReturnBold className="text-xl text-blue-600"/>
+            <li className="flex items-center gap-3">
+              <PiKeyReturnBold className="text-xl text-blue-600" />
               <div>
                 <p className="text-gray-700 font-medium cursor-pointer hover:text-blue-600">
                   Mouse return by Sita
@@ -90,7 +93,7 @@ const Statistics = () => {
               </div>
             </li>
             <li className="flex items-center gap-3">
-              <BsPersonFill className="text-xl text-blue-600"/>
+              <BsPersonFill className="text-xl text-blue-600" />
               <div>
                 <p className="text-gray-700 font-medium not-first:cursor-pointer hover:text-blue-600">
                   Chair assigned to Hari
@@ -99,7 +102,7 @@ const Statistics = () => {
               </div>
             </li>
             <li className="flex items-center gap-3">
-            <PiKeyReturnBold className="text-xl text-blue-600" />
+              <PiKeyReturnBold className="text-xl text-blue-600" />
               <div>
                 <p className="text-gray-700 font-medium cursor-pointer hover:text-blue-600">
                   Printer returned by Gita
@@ -115,4 +118,3 @@ const Statistics = () => {
 };
 
 export default Statistics;
-

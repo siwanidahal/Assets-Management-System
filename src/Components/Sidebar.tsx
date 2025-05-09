@@ -1,9 +1,9 @@
 import { TbLayoutDashboardFilled } from "react-icons/tb";
-// import { FaUserFriends } from "react-icons/fa";
+import { FaAssistiveListeningSystems, FaUserFriends } from "react-icons/fa";
 // import { IoMdCheckbox } from "react-icons/io";
 // import { MdAssignmentInd } from "react-icons/md";
-// import { TbCategoryPlus } from "react-icons/tb";
-import { RiLayout2Fill, RiLayoutGridLine } from "react-icons/ri";
+import { TbCategoryPlus } from "react-icons/tb";
+import { RiLayoutGridLine } from "react-icons/ri";
 import { Link } from "react-router";
 
 const sideLinks = [
@@ -12,32 +12,27 @@ const sideLinks = [
     link: "/",
     icon: TbLayoutDashboardFilled,
   },
+
   {
     name: "Assets",
     link: "/assets",
     icon: RiLayoutGridLine,
   },
   {
-    name: "Assets Out",
-    link: "/assets-out",
-    icon: RiLayout2Fill,
-  },
-  {
     name: "Categories",
     link: "/categories",
-    icon: RiLayoutGridLine,
+    icon: TbCategoryPlus,
   },
   {
     name: "Users",
     link: "/users",
-    icon: RiLayout2Fill,
+    icon: FaUserFriends,
   },
-
-  // {
-  //   name: "Maintenance",
-  //   link: "/maintenance",
-  //   icon: RiLayout2Fill,
-  // },
+  {
+    name: "Assets Out",
+    link: "/Asset-out",
+    icon: FaAssistiveListeningSystems,
+  },
 ];
 const Sidebar = () => {
   return (
@@ -63,24 +58,6 @@ const Sidebar = () => {
               <span className="hidden md:flex">{l.name}</span>
             </Link>
           ))}
-
-          {/* <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <TbCategoryPlus />
-            Categories
-          </div>
-          <div
-            onClick={() => navigate("/users")}
-            className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6"
-          >
-            <FaUserFriends />
-            Users
-          </div>
-          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <MdAssignmentInd /> Assignments
-          </div>
-          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <IoMdCheckbox /> Maintenance
-          </div> */}
         </div>
       </div>
     </div>
