@@ -30,7 +30,7 @@ const sideLinks = [
   },
   {
     name: "Assets Out",
-    link: "/Asset-out",
+    link: "/assets-out",
     icon: FaAssistiveListeningSystems,
   },
 ];
