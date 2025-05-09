@@ -54,11 +54,15 @@ export default function Categories() {
 
   return (
     <div className="h-full border border-gray-200 shadow-xl mt-7 mx-5  ">
-      <div className="flex justify-between border-b-2 shadow-xl p-4">
+    
+      <div className="flex justify-between border-b-2 shadow-xl p-4 " >
+        <div className="flex gap-100 w-fit">
         <h1 className="text-3xl">Categories</h1>
+          <input type="text" placeholder="Search" className="border pl-5 text-lg pt-1 items-end"/>
+        </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="text-white text-xl px-4 py-2 rounded-2xl"
+          className="text-white text-xl px-4 py-2 rounded-2xl pl-50"
         >
           {showForm ? "Cancel" : "Add Category"}
         </button>
@@ -93,7 +97,7 @@ export default function Categories() {
         <h1>Name</h1>
       </div>
 
-      {categoryData.map((category,index) => (
+      { Array.isArray(categoryData) &&categoryData.map((category,index) => (
         <div
           key={index}
           className="flex gap-10 pl-3 py-3 border-b border-blue-100 bg-white hover:bg-blue-50"

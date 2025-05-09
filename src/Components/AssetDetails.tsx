@@ -8,7 +8,9 @@ interface AssetDetails {
   Status: string;
   Asset: {
     AssetName:string
+
   }
+  Info:string
 
 }
 
@@ -23,6 +25,7 @@ export default function Assets() {
     Remarks: "",
     Status: "",
     Asset: "",
+    Info:""
   });
 
   useEffect(() => {
@@ -64,6 +67,7 @@ export default function Assets() {
       Asset: {
         AssetName: formData.Asset, 
       },
+      Info:formData.Info
     };
     setAssetData((prev) => [...prev, newAsset]);
 
@@ -75,6 +79,7 @@ export default function Assets() {
       Remarks: "",
       Status: "",
       Asset: "",
+      Info:""
     });
 
     setShowForm(false);
@@ -82,12 +87,13 @@ export default function Assets() {
 
   return (
     
-      <div className="h-full border border-gray-200 shadow-xl mt-7 mx-5">
-        <div className="flex justify-between border-b-2 shadow-xl p-4">
-          <h1 className="text-3xl">Assets Details</h1>
+      <div className="h-full border border-gray-200  shadow-xl mt-7 mx-5">
+        <div className="flex justify-between border-b-2 shadow-xl p-4 ">
+          <h1 className="text-3xl sm:hidden">Assets Details</h1>
+         
           <button
             onClick={() => setShowForm(!showForm)}
-            className="text-white text-xl bg-blue-500 px-4 py-2 rounded-2xl"
+            className="text-black text-xl bg-blue-500 px-4 py-2 rounded-2xl pl-6 p"
           >
             {showForm ? "Cancel" : "Add Asset"}
           </button>
@@ -124,9 +130,10 @@ export default function Assets() {
           <div className="w-40">Remarks</div>
           <div className="w-32">Status</div>
           <div className="w-40">Asset</div>
+
         </div>
 
-        {assetData.map((asset, index) => (
+        { Array.isArray(assetData) &&assetData.map((asset, index) => (
           <div
             key={index}
             className="flex  gap-20 pl-3 py-3 border-b border-blue-100 bg-white hover:bg-blue-50"
@@ -138,9 +145,11 @@ export default function Assets() {
             <div  className="w-40" >{asset.Remarks}</div>
             <div className="w-32">{asset.Status}</div>
             <div className="w-40">{asset.Asset.AssetName}</div>
+           
           </div>
         ))}
       </div>
     
   );
 }
+

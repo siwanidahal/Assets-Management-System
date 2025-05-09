@@ -55,23 +55,6 @@ const Sidebar = () => {
             </Link>
           ))}
 
-          {/* <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <TbCategoryPlus />
-            Categories
-          </div>
-          <div
-            onClick={() => navigate("/users")}
-            className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6"
-          >
-            <FaUserFriends />
-            Users
-          </div>
-          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <MdAssignmentInd /> Assignments
-          </div>
-          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <IoMdCheckbox /> Maintenance
-          </div> */}
         </div>
       </div>
     </div>
@@ -79,3 +62,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
