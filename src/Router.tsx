@@ -8,6 +8,7 @@ import Assets from "./features/assets/AssetsPage";
 import Statistics from "./Components/cards/Statistics";
 import Categories from "./Components/Categories";
 import Users from "./Components/Users";
+import AssetTable from "./Components/Assignment";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +53,11 @@ export const router = createBrowserRouter([
         path: "/AssetDetails",
         element: <AssetDetails />,
       },
+      {
+        path: "/Asset-out",
+        element: <AssetTable />,
+      },
+      
     ],
   },
 ]);

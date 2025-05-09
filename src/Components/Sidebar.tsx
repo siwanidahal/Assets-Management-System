@@ -1,5 +1,5 @@
 import { TbLayoutDashboardFilled } from "react-icons/tb";
-import { FaUserFriends } from "react-icons/fa";
+import { FaAssistiveListeningSystems, FaUserFriends } from "react-icons/fa";
 // import { IoMdCheckbox } from "react-icons/io";
 // import { MdAssignmentInd } from "react-icons/md";
 import { TbCategoryPlus } from "react-icons/tb";
@@ -12,7 +12,7 @@ const sideLinks = [
     link: "/",
     icon: TbLayoutDashboardFilled,
   },
-  
+
   {
     name: "Assets",
     link: "/assets",
@@ -21,14 +21,18 @@ const sideLinks = [
   {
     name: "Categories",
     link: "/categories",
-    icon: TbCategoryPlus ,
+    icon: TbCategoryPlus,
   },
   {
     name: "Users",
     link: "/users",
-    icon:FaUserFriends,
+    icon: FaUserFriends,
   },
- 
+  {
+    name: "Assets Out",
+    link: "/Asset-out",
+    icon: FaAssistiveListeningSystems,
+  },
 ];
 const Sidebar = () => {
   return (
@@ -54,7 +58,6 @@ const Sidebar = () => {
               <span className="hidden md:flex">{l.name}</span>
             </Link>
           ))}
-
         </div>
       </div>
     </div>
@@ -62,4 +65,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
