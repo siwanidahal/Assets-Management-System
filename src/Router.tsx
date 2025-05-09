@@ -8,7 +8,7 @@ import Assets from "./features/assets/AssetsPage";
 import Statistics from "./Components/cards/Statistics";
 import Categories from "./Components/Categories";
 import Users from "./Components/Users";
-import AssetTable from "./Components/Assignment";
+import AssetsOut from "./pages/AssetsOut";
 
 export const router = createBrowserRouter([
   {
@@ -54,10 +54,9 @@ export const router = createBrowserRouter([
         element: <AssetDetails />,
       },
       {
-        path: "/Asset-out",
-        element: <AssetTable />,
+        path: "/assets-out",
+        element: <AssetsOut />,
       },
-      
     ],
   },
 ]);
