@@ -17,9 +17,28 @@ const sideLinks = [
     link: "/assets",
     icon: RiLayoutGridLine,
   },
+  {
+    name: "Categories",
+    link: "/categories",
+    icon: RiLayoutGridLine,
+  },
+  {
+    name: "Users",
+    link: "/users",
+    icon: RiLayoutGridLine,
+  },
+  {
+    name: "Assignments",
+    link: "/Asset-0ut",
+    icon: RiLayoutGridLine,
+  },
+  // {
+  //   name: "Maintenance",
+  //   link: "/AssetDetails",
+  //   icon: RiLayoutGridLine,
+  // },
 ];
 const Sidebar = () => {
-
   return (
     <div
       className=" h-screen
@@ -27,7 +46,9 @@ const Sidebar = () => {
     >
       <div className=" px-4 pt-10">
         <h1 className="text-2xl font-semibold">
-          <span className="hidden md:flex ">Assets <br /> Management</span>{" "}
+          <span className="hidden md:flex ">
+            Assets <br /> Management
+          </span>{" "}
           <span className="md:hidden">AM</span>
         </h1>
         <div className="mt-10 flex items-center md:items-start flex-col space-y-5 cursor-pointer">
