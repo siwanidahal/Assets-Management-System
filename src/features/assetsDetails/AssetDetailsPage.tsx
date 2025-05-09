@@ -7,9 +7,8 @@ interface AssetDetails {
   Remarks: string;
   Status: string;
   Asset: {
-    AssetName:string
-  }
-
+    AssetName: string;
+  };
 }
 
 export default function Assets() {
@@ -53,7 +52,7 @@ export default function Assets() {
       alert("Please fill out both ID and Name fields.");
       return;
     }
-    
+
     const newAsset: AssetDetails = {
       Sn: formData.Sn,
       AssetCode: formData.AssetCode,
@@ -62,7 +61,7 @@ export default function Assets() {
       Remarks: formData.Remarks,
       Status: formData.Status,
       Asset: {
-        AssetName: formData.Asset, 
+        AssetName: formData.Asset,
       },
     };
     setAssetData((prev) => [...prev, newAsset]);
@@ -98,8 +97,13 @@ export default function Assets() {
             {Object.keys(formData).map((key) => (
               <input
                 key={key}
-                type={key === "SN" ? "number" : key === "PurchaseDate"
-                  ? "date" :"text"}
+                type={
+                  key === "SN"
+                    ? "number"
+                    : key === "PurchaseDate"
+                    ? "date"
+                    : "text"
+                }
                 name={key}
                 value={formData[key as keyof typeof formData]}
                 placeholder={key}
@@ -117,10 +121,10 @@ export default function Assets() {
         )}
 
         <div className="flex gap-20 pl-3 py-3 font-semibold bg-gray-100 border-b border-blue-200">
-          <div  className="w-20">S.N</div>
+          <div className="w-20">S.N</div>
           <div className="w-40">AssetCode</div>
           <div className="w-24">Price</div>
-          <div className="w-24" >PurchaseDate</div>
+          <div className="w-24">PurchaseDate</div>
           <div className="w-40">Remarks</div>
           <div className="w-32">Status</div>
           <div className="w-40">Asset</div>
@@ -132,10 +136,10 @@ export default function Assets() {
             className="flex  gap-20 pl-3 py-3 border-b border-blue-100 bg-white hover:bg-blue-50"
           >
             <div className="w-20">{asset.Sn}</div>
-            <div className="w-40" >{asset.AssetCode}</div>
+            <div className="w-40">{asset.AssetCode}</div>
             <div className="w-24">{asset.Price}</div>
-            <div  className="w-24">{asset.PurchaseDate}</div>
-            <div  className="w-40" >{asset.Remarks}</div>
+            <div className="w-24">{asset.PurchaseDate}</div>
+            <div className="w-40">{asset.Remarks}</div>
             <div className="w-32">{asset.Status}</div>
             <div className="w-40">{asset.Asset.AssetName}</div>
           </div>

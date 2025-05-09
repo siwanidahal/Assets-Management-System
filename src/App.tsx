@@ -5,6 +5,7 @@ const App = () => {
   return (
     <div className="flex">
       <Sidebar />
+
       <div className="flex-1">
         <Outlet />
       </div>
