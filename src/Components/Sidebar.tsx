@@ -1,5 +1,5 @@
 import { TbLayoutDashboardFilled } from "react-icons/tb";
-import { FaUserFriends } from "react-icons/fa";
+import { FaAssistiveListeningSystems, FaUserFriends } from "react-icons/fa";
 // import { IoMdCheckbox } from "react-icons/io";
 // import { MdAssignmentInd } from "react-icons/md";
 import { TbCategoryPlus } from "react-icons/tb";
@@ -28,6 +28,11 @@ const sideLinks = [
     link: "/users",
     icon: FaUserFriends,
   },
+  {
+    name: "Assets Out",
+    link: "/assets-out",
+    icon: FaAssistiveListeningSystems,
+  },
 ];
 const Sidebar = () => {
   return (
@@ -53,24 +58,6 @@ const Sidebar = () => {
               <span className="hidden md:flex">{l.name}</span>
             </Link>
           ))}
-
-          {/* <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <TbCategoryPlus />
-            Categories
-          </div>
-          <div
-            onClick={() => navigate("/users")}
-            className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6"
-          >
-            <FaUserFriends />
-            Users
-          </div>
-          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <MdAssignmentInd /> Assignments
-          </div>
-          <div className="flex items-center gap-2 hover:bg-blue-100 hover:rounded-b-sm pl-1.5 p-1 mr-6">
-            <IoMdCheckbox /> Maintenance
-          </div> */}
         </div>
       </div>
     </div>
