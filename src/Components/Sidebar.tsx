@@ -5,14 +5,12 @@ import { FaAssistiveListeningSystems, FaUserFriends } from "react-icons/fa";
 import { TbCategoryPlus } from "react-icons/tb";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { Link } from "react-router";
-
 const sideLinks = [
   {
     name: "Dashboard",
     link: "/",
     icon: TbLayoutDashboardFilled,
   },
-
   {
     name: "Assets",
     link: "/assets",
