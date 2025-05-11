@@ -3,12 +3,12 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 // import Sidebar from "./Components/Sidebar";
 import App from "./App";
-import AssetDetails from "./features/assetsDetails/AssetDetailsPage";
 import Assets from "./features/assets/AssetsPage";
 import Statistics from "./Components/cards/Statistics";
 import Categories from "./Components/Categories";
 import Users from "./Components/Users";
 import AssetsOut from "./pages/AssetsOut";
+import AssetDetailsPage from "./features/assetsDetails/AssetDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -34,10 +34,7 @@ export const router = createBrowserRouter([
             index: true,
             element: <Assets />,
           },
-          {
-            path: "/assets-details",
-            element: <AssetDetails />,
-          },
+          
         ],
       },
       {
@@ -50,9 +47,11 @@ export const router = createBrowserRouter([
         element: <Categories />,
       },
       {
-        path: "/AssetDetails",
-        element: <AssetDetails />,
+
+        path: "assets-details",
+        element: <AssetDetailsPage />,
       },
+          
       {
         path: "/assets-out",
         element: <AssetsOut />,
