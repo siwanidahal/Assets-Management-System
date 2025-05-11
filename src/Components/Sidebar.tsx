@@ -12,7 +12,7 @@ const sideLinks = [
     link: "/",
     icon: TbLayoutDashboardFilled,
   },
-  
+
   {
     name: "Assets",
     link: "/assets",
@@ -21,14 +21,13 @@ const sideLinks = [
   {
     name: "Categories",
     link: "/categories",
-    icon: TbCategoryPlus ,
+    icon: TbCategoryPlus,
   },
   {
     name: "Users",
     link: "/users",
-    icon:FaUserFriends,
+    icon: FaUserFriends,
   },
- 
 ];
 const Sidebar = () => {
   return (
