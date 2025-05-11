@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router";
+import Action from "./Action";
 
 // interface Asset {
 //   AssetId: number;
@@ -301,7 +302,7 @@ export default function Assets() {
   const location = useLocation();
   console.log(location);
   const queryParams = new URLSearchParams(location.search);
-  const page = queryParams.get("page");
+  const page = queryParams.get("page") || "1";
   const [pagination, setPagination] = useState<Pagination>({
     current_page: page ? parseInt(page) : 1,
   });
@@ -388,7 +389,7 @@ export default function Assets() {
     navigate(`/assets?page=${nPage}`);
   };
   return (
-    <div className="h-full border-1 border-gray-200 shadow-xl mt-7 ml-5 mr-5">
+    <div className="h-full border-1 border-gray-200 shadow-xl mr-5">
       <div className="w-full h-15 flex justify-between border-b-2 border-b-gray-100 shadow-xl">
         <h1 className="text-3xl mt-2 ml-4">Assets</h1>
         <div className="relative flex items-center gap-4 mr-8 mt-3 mb-3">
@@ -411,9 +412,9 @@ export default function Assets() {
 
       {showForm && (
         <div className="p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 nowrap">
             <div>
-              <label htmlFor="Name" className="block text-sm font-medium mb-1">
+              <label htmlFor="Name" className="block text-sm font-medium mb-1 ">
                 Name
               </label>
               <input
@@ -499,6 +500,7 @@ export default function Assets() {
             <th className="px-4 py-2 text-left">Description</th>
             <th className="px-4 py-2 text-left">Unit</th>
             <th className="px-4 py-2 text-left">Asset Category</th>
+            <th className="px-4 py-2 text-left">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -507,7 +509,7 @@ export default function Assets() {
               <tr
                 key={asset.AssetId}
                 className="border-b border-blue-100 hover:bg-blue-50"
-                onClick={() => navigate(`/assets-details/${asset.AssetId}`)}
+                // onClick={() => navigate(`/assets-details/${asset.AssetId}`)}
               >
                 <td className="px-4 py-2">{asset.AssetId}</td>
                 <td className="px-4 py-2  text-balance">{asset.Name}</td>
@@ -517,6 +519,9 @@ export default function Assets() {
                 </td>
                 <td className="px-4 py-2">{asset.Unit}</td>
                 <td className="px-4 py-2">{asset.AssetCategoryName}</td>
+                <td className="px-4 py-2 relative">
+                  <Action assetId={asset.AssetId} />
+                </td>
               </tr>
             ))}
         </tbody>
