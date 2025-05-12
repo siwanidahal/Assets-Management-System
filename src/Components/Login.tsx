@@ -47,7 +47,7 @@ export default function Login() {
       <div className="flex h-screen w-full items-center justify-center bg-gray-100">
         <div className="flex w-[80%] max-w-5xl h-[70%] bg-white shadow-2xl rounded-2xl overflow-hidden">
           {/* Left Panel */}
-          <div className="w-1/2 bg-purple-400 text-white flex flex-col justify-center items-center p-10 rounded-tr-lg rounded-br-full transition-all duration-700 ease-in-out ">
+          <div className="w-1/2 bg-teal-500 text-white flex flex-col justify-center items-center p-10 rounded-tr-lg rounded-br-full transition-all duration-700 ease-in-out ">
             <h2 className="text-3xl font-bold mb-4">Hello, Welcome!</h2>
             <p className="mb-6">Don't have an account?</p>
             <button
@@ -85,7 +85,7 @@ export default function Login() {
               </div>
               <button
                 type="submit"
-                className="bg-purple-400 text-white py-2 rounded font-semibold w-full hover:bg-white hover:border-2 hover:border-purple-400 hover:text-blue-500 transition"
+                className="bg-teal-500 text-white py-2 rounded font-semibold w-full hover:bg-white hover:border-2 hover:border-teal-400 hover:text-blue-500 transition"
               >
                 Submit
               </button>
@@ -118,7 +118,7 @@ function InputComp({
         type={type}
         name={name}
         placeholder={placeholder}
-        className="border border-gray-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-purple-400"
+        className="border border-gray-400 rounded p-2 focus:outline-none focus:ring-1 focus:ring-teal-500"
         {...rest}
       />
     </div>

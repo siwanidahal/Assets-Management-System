@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useNavigate } from "react-router";
@@ -12,6 +13,21 @@ const Action = ({ assetId }: { assetId: number }) => {
       document.removeEventListener("click", closeData);
     };
   }, []);
+
+  const handleDelete = async () => {
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this asset?"
+      );
+      if (confirmDelete) return;
+
+      await axios.delete(`http://127.0.0.1:8001/api/assets/${assetId}/`);
+      window.alert("Asset deleted successfully");
+    } catch (error) {
+      console.error("Error deleting asset:", error);
+      window.alert("Failed to delete asset");
+    }
+  };
 
   return (
     <div className="relative flex items-center">
@@ -36,7 +52,10 @@ const Action = ({ assetId }: { assetId: number }) => {
           <button className="block w-full text-left px-4 py-1 hover:bg-gray-100">
             Edit
           </button>
-          <button className="block w-full text-left px-4 py-1 hover:bg-gray-100">
+          <button
+            className="block w-full text-left px-4 py-1 hover:bg-gray-100"
+            onClick={handleDelete}
+          >
             Delete
           </button>
         </div>
