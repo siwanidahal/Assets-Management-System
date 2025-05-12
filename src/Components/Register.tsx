@@ -120,7 +120,7 @@ export default function Register() {
 
             <button
               type="submit"
-              className=" font-semibold  bg-purple-400 text-white py-2 rounded  w-full hover:bg-white hover:border-2 hover:border-purple-400 hover:text-blue-500 transition"
+              className=" font-semibold  bg-teal-500 text-white py-2 rounded  w-full hover:bg-white hover:border-2 hover:border-teal-500 hover:text-blue-500 transition"
             >
               Register
             </button>
@@ -129,7 +129,7 @@ export default function Register() {
               Already have an account?{" "}
               <button
                 type="button"
-                className="text-purple-700 hover:underline"
+                className="text-teal-500 hover:underline"
                 onClick={() => navigate("/login")}
               >
                 Login
@@ -139,7 +139,7 @@ export default function Register() {
         </div>
 
         {/* Left Purple Gradient Panel */}
-        <div className="w-1/2 bg-purple-400 text-white flex flex-col justify-center items-center p-10 rounded-l-[80%] rounded-tl-full  transition-all duration-700 ease-in-out">
+        <div className="w-1/2 bg-teal-500 text-white flex flex-col justify-center items-center p-10 rounded-l-[80%] rounded-tl-full  transition-all duration-700 ease-in-out">
           <h2 className="text-4xl font-bold mb-6">Welcome!</h2>
           <p className="text-lg text-center leading-6">
             Join us and enjoy seamless experience. Let's get you registered!
@@ -170,7 +170,7 @@ function InputComp({
       <input
         type={type}
         placeholder={placeholder}
-        className="border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-purple-400"
+        className="border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-teal-500"
         {...rest}
       />
     </div>
