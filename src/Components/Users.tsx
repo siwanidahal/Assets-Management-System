@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-
+import { CiSearch } from "react-icons/ci";
+import { useNavigate } from "react-router";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 interface Users {
   id: number;
   username: string;
@@ -11,6 +13,8 @@ interface Users {
 }
 export default function Users() {
   const [userData, setUserData] = useState<Users[]>([]);
+  const [serachData, setSearchData] = useState("");
+  const navigate = useNavigate();
   // const [formData, setFormData] = useState({
   //   id: 0,
   //   username: "",
@@ -19,6 +23,11 @@ export default function Users() {
   //   fist_name: "",
   //   last_name: "",
   // });
+  const filterData = userData.filter((user) =>
+    `${user.username} ${user.first_name} ${user.last_name} ${user.address} ${user.phone_number}`
+      .toLowerCase()
+      .includes(serachData.toLowerCase())
+  );
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -104,40 +113,86 @@ export default function Users() {
   // ];
 
   return (
-    <>
-      <div className="h-full border-1 border-gray-200 shadow-xl ">
-        {/* <div className="w-full h-15 flex justify-between border-b-2 border-b-gray-100 shadow-xl ">
-          <h1 className="text-3xl mt-2 ml-4">Users Details</h1>
-        </div> */}
-        <table className="w-full table-auto">
-          <thead className="bg-gray-100 border-b border-blue-200">
-            <tr className="flex gap-19 pl-3 py-6 font-semibold">
-              <th className="w-1/6 text-left">UserID</th>
-              <th className="w-1/6 text-left">UserName</th>
-              <th className="w-1/6 text-left">Address</th>
-              <th className="w-1/6 text-left">PhoneNo</th>
-              <th className="w-1/6 text-left">First_Name</th>
-              <th className="w-1/6 text-left">Last_Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {userData.map((user) => (
-              <tr
-                key={user.id}
-                className="flex gap-21 pl-4 py-3 border-b border-blue-100 bg-white hover:bg-blue-50"
-              >
-                <td className="w-1/6">{user.id}</td>
-                <td className="w-1/6">{user.username}</td>
-                <td className="w-1/6">{user.address}</td>
-                <td className="w-1/6">{user.phone_number}</td>
-                <td className="w-1/6">{user.first_name}</td>
-                <td className="w-1/6">{user.last_name}</td>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-6 ">
+          <div className="flex items-center">
+            <button
+              onClick={() => navigate("/")}
+              className="mr-4 p-2 rounded-lg hover:bg-gray-100"
+            >
+              <IoArrowBackCircleSharp className="text-2xl text-black-500" />
+            </button>
+          </div>
+          <h1 className="text-2xl font-bold text-teal-500 mb-4 sm:mb-0">
+            User Details
+          </h1>
+          <div className="relative w-full sm:w-64">
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={serachData}
+              onChange={(e) => setSearchData(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+            <CiSearch className="absolute left-3 top-3 text-gray-400" />
+          </div>
+        </div>
+
+        {/* User Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr className="bg-teal-500">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  User ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  Username
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  Address
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  Phone No
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  First Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  Last Name
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filterData.length > 0 ? (
+                filterData.map((user) => (
+                  <tr
+                    key={user.id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm">{user.id}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-teal-500">
+                      {user.username}
+                    </td>
+                    <td className="px-6 py-4 text-sm">{user.address}</td>
+                    <td className="px-6 py-4 text-sm">{user.phone_number}</td>
+                    <td className="px-6 py-4 text-sm">{user.first_name}</td>
+                    <td className="px-6 py-4 text-sm">{user.last_name}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="text-center py-4 text-gray-500">
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
