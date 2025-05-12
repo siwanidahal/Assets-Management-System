@@ -1,10 +1,12 @@
-
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { CiSearch } from "react-icons/ci";
+import { IoArrowBack } from "react-icons/io5";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 interface Category {
-  id: number;  // Changed from Id to id
-  name: string; // Changed from Name to name
+  id: number;
+  name: string;
 }
 
 interface CategoryResponse {
@@ -26,28 +28,28 @@ const CATEGORY_URL = "https://2k8mf0hg-8001.inc1.devtunnels.ms/api/categories/";
 
 export default function Categories() {
   const [categoryData, setCategoryData] = useState<Category[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const page = queryParams.get("page");
+  const page = queryParams.get("page") || "1";
   const navigate = useNavigate();
 
   const [pagination, setPagination] = useState<Pagination>({
     current_page: page ? parseInt(page) : 1,
   });
-
+  const [openMenu, setOpenMenu] = useState<number | null>(null);
   const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch(CATEGORY_URL + `?page=${page}`);
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
       const data: CategoryResponse = await response.json();
-      
-      // Transform data to match the expected format
-      const formattedData = data.results.map(item => ({
-        id: item.id || item.id, // Handle both cases
-        name: item.name || item.name // Handle both cases
+
+      const formattedData = data.results.map((item) => ({
+        id: item.id,
+        name: item.name,
       }));
-      
+
       setCategoryData(formattedData);
       setPagination(data.pagination);
     } catch (error) {
@@ -58,6 +60,11 @@ export default function Categories() {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
+  useEffect(() => {
+    const closeMenu = () => setOpenMenu(null);
+    document.addEventListener("click", closeMenu);
+    return () => document.removeEventListener("click", closeMenu);
+  }, []);
 
   const nextPage = () => {
     if (!pagination.has_next) return;
@@ -70,49 +77,116 @@ export default function Categories() {
     const nPage = pagination.current_page - 1;
     navigate(`/categories?page=${nPage}`);
   };
+    const filteredCategory = categoryData.filter(category =>
+  category.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
 
   return (
-    <div className="h-full border-1 border-gray-200 shadow-xl mt-7 ml-5 mr-5">
-      <div className="w-full h-15 flex justify-between border-b-2 border-b-gray-100 shadow-xl">
-        <h1 className="text-3xl mt-2 ml-4">Categories</h1>
-      </div>
+    <div className="min-h-screen bg-gray-50 p-6 ">
+      <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-1">
+          <div className="flex items-center ">
+            <button
+              onClick={() => navigate("/")}
+              className="mr-4 p-2 rounded-full bg-white shadow"
+            >
+              <IoArrowBack className="text-2xl text-black-500 font-light" />
+            </button>
+            <h1 className="text-2xl font-semibold text-teal-600 mb-4 absolute left-1/2 transform -translate-x-1/2">Categories</h1>
+          </div>
 
-      <table className="w-full table-auto border-collapse mt-5">
-        <thead>
-          <tr className="bg-gray-100 border-b border-blue-200">
-            <th className="px-4 py-2 text-left">ID</th>
-            <th className="px-4 py-2 text-left">Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(categoryData) &&
-            categoryData.map((category) => (
-              <tr
-                key={category.id}
-                className="border-b border-blue-100 hover:bg-blue-50"
-              >
-                <td className="px-4 py-2">{category.id}</td>
-                <td className="px-4 py-2">{category.name}</td>
+          <div className="relative w-full sm:w-64 shadow-md rounded-lg text-lg">
+            <input
+              type="text"
+              placeholder="Search categories..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm"
+            />
+            <CiSearch className="absolute left-3 top-3  text-lg" />
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left ">
+            <thead className="text-white bg-teal-500 text-sm uppercase">
+              <tr>
+                <th className="px-6 py-4">ID</th>
+                <th className="px-6 py-4">Name</th>
+                <th className="px-6 py-4">Action</th>
               </tr>
-            ))}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {Array.isArray(categoryData) &&
+              filteredCategory.map((category) => (
+                  <tr
+                    key={category.id}
+                    className="border-b hover:bg-blue-50 "
+                  >
+                    <td className="px-6 py-4">{category.id}</td>
+                    <td className="px-6 py-4 ">{category.name}</td>
+                    <td className="px-6 py-4 text-sm relative">
+                      <div className="relative inline-block text-left">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenu(
+                              openMenu === category.id ? null : category.id
+                            );
+                          }}
+                          className="text-black focus:outline-none"
+                        >
+                          <BsThreeDotsVertical className="" />
+                        </button>
+                        {openMenu === category.id && (
+                          <div className="absolute left-0 mt-1 w-20 rounded shadow z-10 bg-white border text-xs ">
+                            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
+                              View
+                            </button>
+                            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
+                              Edit
+                            </button>
+                            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 text-red-500">
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
 
-      <div className="flex justify-between p-4">
-        <button
-          onClick={prevPage}
-          disabled={!pagination.has_previous}
-          className="bg-blue-400 px-4 py-2 rounded text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <button
-          onClick={nextPage}
-          disabled={!pagination.has_next}
-          className="bg-blue-400 px-4 py-2 rounded text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
+        <div className="flex items-center justify-between px-6 py-4 bg-gray-50 ">
+          <div className="text-sm ">Page {pagination.current_page}</div>
+          <div className="flex space-x-2">
+            <button
+              onClick={prevPage}
+              disabled={!pagination.has_previous}
+              className={`px-4 py-2 border border-gray-300 rounded-md text-sm font-medium ${
+                pagination.has_previous
+                  ? "bg-blue-600 text-white hover:bg-gray-50"
+                  : "bg-teal-500 text-white "
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={nextPage}
+              disabled={!pagination.has_next}
+              className={`px-4 py-2 border border-gray-300 rounded-md text-sm font-medium ${
+                pagination.has_next
+                  ? "bg-blue-600 text-white hover:bg-gray-50"
+                  : "bg-teal-500  text-white"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

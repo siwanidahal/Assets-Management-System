@@ -5,6 +5,7 @@ import { FaAssistiveListeningSystems, FaUserFriends } from "react-icons/fa";
 import { TbCategoryPlus } from "react-icons/tb";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { Link } from "react-router";
+import { FaBoxOpen } from "react-icons/fa";
 const sideLinks = [
   {
     name: "Dashboard",
@@ -25,6 +26,12 @@ const sideLinks = [
     name: "Users",
     link: "/users",
     icon: FaUserFriends,
+  },
+  {
+    name:"Assets Details",
+    link:"/assets-details",
+  icon: FaBoxOpen,
+   
   },
   {
     name: "Assets Out",

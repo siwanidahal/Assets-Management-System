@@ -492,8 +492,8 @@ export default function Assets() {
       )}
 
       <table className="w-full table-auto border-collapse mt-5">
-        <thead>
-          <tr className="bg-gray-100 border-b border-blue-200">
+        <thead className="">
+          <tr className="bg-teal-500 text-white">
             <th className="px-4 py-2 text-left">AssetId</th>
             <th className="px-4 py-2 text-left">Asset Name</th>
             <th className="px-4 py-2 text-left">Short Name</th>
