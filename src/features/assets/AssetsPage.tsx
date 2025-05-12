@@ -498,7 +498,7 @@ export default function Assets() {
             <th className="px-4 py-2 text-left">Asset Name</th>
             <th className="px-4 py-2 text-left">Short Name</th>
             <th className="px-4 py-2 text-left">Description</th>
-            <th className="px-4 py-2 text-left">Unit</th>
+            <th className="px-4 py-2 text-left">unit</th>
             <th className="px-4 py-2 text-left">Asset Category</th>
             <th className="px-4 py-2 text-left">Action</th>
           </tr>
