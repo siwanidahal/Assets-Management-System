@@ -1,8 +1,9 @@
+
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDotsVertical, BsCheck, BsX } from "react-icons/bs";
 
 interface AssetDetails {
   Sn: number;
@@ -39,6 +40,9 @@ const AssetDetailsPage: React.FC = () => {
     has_previous: false,
   });
   const [openMenu, setOpenMenu] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editData, setEditData] = useState<Partial<AssetDetails>>({});
+  const [isDeleteConfirm, setIsDeleteConfirm] = useState<number | null>(null);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -49,8 +53,9 @@ const AssetDetailsPage: React.FC = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       try {
+  
         const response = await fetch(
-          `https://2k8mf0hg-8001.inc1.devtunnels.ms/api/asset-details/?page=${currentPage}`
+          `http://127.0.0.1:8001/api/asset-details/?page=${currentPage}`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -62,7 +67,7 @@ const AssetDetailsPage: React.FC = () => {
       } catch (error) {
         console.error("Error fetching assets:", error);
       }
-    };
+    };  
 
     fetchAssets();
   }, [currentPage]);
@@ -78,13 +83,87 @@ const AssetDetailsPage: React.FC = () => {
     const prevPage = pagination.current_page - 1;
     navigate(`/asset-details?page=${prevPage}`);
   };
+
+  const handleViewDetails = (assetId: number) => {
+    navigate(`/asset-details/${assetId}`);
+  };
+
+  const startEditing = (asset: AssetDetails) => {
+    setEditingId(asset.Sn);
+    setEditData({ ...asset });
+  };
+
+  const handleEditChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    field: keyof AssetDetails
+  ) => {
+    setEditData({
+      ...editData,
+      [field]: e.target.value,
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditData({});
+  };
+
+  const saveEditing = async (assetId: number) => {
+    try {
+      const response = await fetch(
+        `https://asset-management-system-2y9g.onrender.com/api/asset-details/${assetId}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const updatedAsset = await response.json();
+      setAssetData(
+        assetData.map((asset) =>
+          asset.Sn === assetId ? { ...asset, ...updatedAsset } : asset
+        )
+      );
+      setEditingId(null);
+      setEditData({});
+    } catch (error) {
+      console.error("Error updating asset:", error);
+    }
+  };
+
+  const handleDelete = async (assetId: number) => {
+    try {
+      const response = await fetch(
+        `https://asset-management-system-2y9g.onrender.com/api/asset-details/${assetId}/`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      setAssetData(assetData.filter((asset) => asset.Sn !== assetId));
+      setIsDeleteConfirm(null);
+    } catch (error) {
+      console.error("Error deleting asset:", error);
+    }
+  };
+
   const filteredAssets = assetData.filter((asset) =>
     asset.AssetName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-gray-50 p-1">
-      
       {openMenu && (
         <div
           onClick={() => setOpenMenu(null)}
@@ -118,12 +197,9 @@ const AssetDetailsPage: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto shadow-md rounded-lg m-4">
-          <table className="min-w-full divide-y divide-gray-200 ">
+          <table className="min-w-full divide-y divide-gray-200 whitespace-nowrap">
             <thead className="bg-teal-500 text-white ">
               <tr>
-                {/* <th className="px-6 py-3 text-left text-sm font-semibold  uppercase">
-                  Sn
-                </th> */}
                 <th className="px-6 py-3 text-left text-sm font-semibold uppercase">
                   Asset ID
                 </th>
@@ -156,54 +232,187 @@ const AssetDetailsPage: React.FC = () => {
                   key={asset.Sn}
                   className="hover:bg-gray-50 transition-colors"
                 >
-                  {/* <td className="px-6 py-4 text-sm">{asset.Sn}</td> */}
-                  <td className="px-6 py-4 text-sm ">{asset.Asset}</td>
-                  <td className="px-6 py-4 text-sm text-teal-700">
-                    {asset.AssetName}
+                  <td className="px-6 py-4 text-sm ">
+                    {editingId === asset.Sn ? (
+                      <input
+                        type="number"
+                        value={editData.Asset ?? asset.Asset}
+                        onChange={(e) => handleEditChange(e, "Asset")}
+                        className="border rounded px-2 py-1 w-20"
+                      />
+                    ) : (
+                      asset.Asset
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-sm">{asset.AssetCode}</td>
-                  <td className="px-6 py-4 text-sm">
-                    {asset.Price.toLocaleString()}
+                  <td className="px-6 py-4 text-sm  text-teal-600 font-semibold">
+                    {editingId === asset.Sn ? (
+                      <input
+                        type="text"
+                        value={editData.AssetName ?? asset.AssetName}
+                        onChange={(e) => handleEditChange(e, "AssetName")}
+                        className="border rounded px-2 py-1"
+                      />
+                    ) : (
+                      asset.AssetName
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-sm">{asset.PurchaseDate}</td>
-                  <td className="px-6 py-4 text-sm">{asset.Remarks}</td>
                   <td className="px-6 py-4 text-sm">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        asset.Status === "working"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {asset.Status}
-                    </span>
+                    {editingId === asset.Sn ? (
+                      <input
+                        type="text"
+                        value={editData.AssetCode ?? asset.AssetCode}
+                        onChange={(e) => handleEditChange(e, "AssetCode")}
+                        className="border rounded px-2 py-1"
+                      />
+                    ) : (
+                      asset.AssetCode
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    {editingId === asset.Sn ? (
+                      <input
+                        type="number"
+                        value={editData.Price ?? asset.Price}
+                        onChange={(e) => handleEditChange(e, "Price")}
+                        className="border rounded px-2 py-1 w-20"
+                      />
+                    ) : (
+                      asset.Price.toLocaleString()
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    {editingId === asset.Sn ? (
+                      <input
+                        type="date"
+                        value={editData.PurchaseDate ?? asset.PurchaseDate}
+                        onChange={(e) => handleEditChange(e, "PurchaseDate")}
+                        className="border rounded px-2 py-1"
+                      />
+                    ) : (
+                      asset.PurchaseDate
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    {editingId === asset.Sn ? (
+                      <input
+                        type="text"
+                        value={editData.Remarks ?? asset.Remarks}
+                        onChange={(e) => handleEditChange(e, "Remarks")}
+                        className="border rounded px-2 py-1"
+                      />
+                    ) : (
+                      asset.Remarks
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-sm">
+                    {editingId === asset.Sn ? (
+                      <select
+                        value={editData.Status ?? asset.Status}
+                        onChange={(e) => handleEditChange(e, "Status")}
+                        className="border rounded px-2 py-1"
+                      >
+                        <option value="working">working</option>
+                        <option value="not working">not working</option>
+                      </select>
+                    ) : (
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          asset.Status === "working"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {asset.Status}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm relative">
-                    <div className="relative inline-block text-left">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log(openMenu, asset.Asset);
-                          setOpenMenu(openMenu === asset.Sn ? null : asset.Sn);
-                        }}
-                        className="text-black focus:outline-none"
-                      >
-                        <BsThreeDotsVertical className="" />
-                      </button>
-                      {openMenu === asset.Sn && (
-                        <div className="absolute left-0 mt-1 w-20 rounded shadow z-10 bg-white border text-xs">
-                          <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
-                            View
+  {editingId === asset.Sn ? (
+    <div className="flex flex-nowrap items-center gap-1 z-20 relative">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          saveEditing(asset.Sn);
+        }}
+        className="text-green-600 hover:text-green-800 p-1"
+        title="Save"
+        style={{ zIndex: 30, position: "relative" }}
+      >
+        <BsCheck className="text-lg" />
+      </button>
+      <button
+        onClick={cancelEditing}
+        className="text-red-600 hover:text-red-800 p-1"
+        title="Cancel"
+        style={{ zIndex: 30, position: "relative" }}
+      >
+        <BsX className="text-lg" />
+      </button>
+    </div>
+                    ) : isDeleteConfirm === asset.Sn ? (
+                      <div className="flex flex-col space-y-1 text-xs">
+                        <span>Are you sure?</span>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleDelete(asset.Sn)}
+                            className="text-red-600 hover:text-red-800"
+                          >
+                            Yes
                           </button>
-                          <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
-                            Edit
-                          </button>
-                          <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 text-red-500">
-                            Delete
+                          <button
+                            onClick={() => setIsDeleteConfirm(null)}
+                            className="text-gray-600 hover:text-gray-800"
+                          >
+                            No
                           </button>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <div className="relative inline-block text-left">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenu(
+                              openMenu === asset.Sn ? null : asset.Sn
+                            );
+                          }}
+                          className="text-black focus:outline-none"
+                        >
+                          <BsThreeDotsVertical className="" />
+                        </button>
+                        {openMenu === asset.Sn && (
+                          <div className="absolute right-0 mt-1 min-w-[100px] rounded shadow z-10 bg-white border text-xs">
+                            <button
+                              onClick={() => {
+                                handleViewDetails(asset.Asset);
+                                setOpenMenu(null);
+                              }}
+                              className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => {
+                                startEditing(asset);
+                                setOpenMenu(null);
+                              }}
+                              className="flex items-center w-full text-left px-2 py-1 hover:bg-gray-100"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => {
+                                setIsDeleteConfirm(asset.Sn);
+                                setOpenMenu(null);
+                              }}
+                              className="block w-full text-left px-2 py-1 hover:bg-gray-100 text-red-500"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -9,6 +9,7 @@ import Categories from "./Components/Categories";
 import Users from "./Components/Users";
 import AssetsOut from "./pages/AssetsOut";
 import AssetDetailsPage from "./features/assetsDetails/AssetDetailsPage";
+import LogoutPage from "./Components/Logout";
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,12 @@ export const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
+  {
+    path: "/logout",
+    element:<LogoutPage />,
+  },
+
+
   {
     path: "/",
     element: <App />,

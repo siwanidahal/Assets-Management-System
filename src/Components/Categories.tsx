@@ -24,7 +24,7 @@ interface Pagination {
   total_pages?: number;
 }
 
-const CATEGORY_URL = "https://2k8mf0hg-8001.inc1.devtunnels.ms/api/categories/";
+const CATEGORY_URL = "https://asset-management-system-2y9g.onrender.com/api/categories/";
 
 export default function Categories() {
   const [categoryData, setCategoryData] = useState<Category[]>([]);
@@ -125,7 +125,7 @@ export default function Categories() {
                     className="border-b hover:bg-blue-50 "
                   >
                     <td className="px-6 py-4">{category.id}</td>
-                    <td className="px-6 py-4 ">{category.name}</td>
+                    <td className="px-6 py-4 text-teal-600 font-semibold">{category.name}</td>
                     <td className="px-6 py-4 text-sm relative">
                       <div className="relative inline-block text-left">
                         <button

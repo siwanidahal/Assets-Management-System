@@ -296,7 +296,7 @@ interface Pagination {
   total_items?: number;
   total_pages?: number;
 }
-const ASSETS_URL = "https://2k8mf0hg-8001.inc1.devtunnels.ms/api/assets/";
+const ASSETS_URL = "http://127.0.0.1:8001/api/assets/";
 export default function Assets() {
   const [showForm, setShowForm] = useState(false);
   const [assetData, setAssetData] = useState<Asset[]>([]);
@@ -354,7 +354,7 @@ export default function Assets() {
       };
 
       const response = await fetch(
-        "https://2k8mf0hg-8001.inc1.devtunnels.ms/api/assets/",
+        "http://127.0.0.1:8001/api/assets/",
         {
           method: "POST",
           headers: {
