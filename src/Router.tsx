@@ -22,6 +22,10 @@ export const router = createBrowserRouter([
     element: <NewUsers />,
   },
   {
+    path: "/logout",
+    element: <LogoutPage />,
+  },
+  {
     path: "/",
     element: <App />,
     children: [
