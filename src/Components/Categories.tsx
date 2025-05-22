@@ -77,10 +77,9 @@ export default function Categories() {
     const nPage = pagination.current_page - 1;
     navigate(`/categories?page=${nPage}`);
   };
-    const filteredCategory = categoryData.filter(category =>
-  category.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
-
+  const filteredCategory = categoryData.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 ">
@@ -93,7 +92,9 @@ export default function Categories() {
             >
               <IoArrowBack className="text-2xl text-black-500 font-light" />
             </button>
-            <h1 className="text-2xl font-semibold text-teal-600 mb-4 absolute left-1/2 transform -translate-x-1/2">Categories</h1>
+            <h1 className="text-2xl font-semibold text-teal-600 mb-4 absolute left-1/2 transform -translate-x-1/2">
+              Categories
+            </h1>
           </div>
 
           <div className="relative w-full sm:w-64 shadow-md rounded-lg text-lg">
@@ -119,11 +120,8 @@ export default function Categories() {
             </thead>
             <tbody>
               {Array.isArray(categoryData) &&
-              filteredCategory.map((category) => (
-                  <tr
-                    key={category.id}
-                    className="border-b hover:bg-blue-50 "
-                  >
+                filteredCategory.map((category) => (
+                  <tr key={category.id} className="border-b hover:bg-blue-50 ">
                     <td className="px-6 py-4">{category.id}</td>
                     <td className="px-6 py-4 text-teal-600 font-semibold">{category.name}</td>
                     <td className="px-6 py-4 text-sm relative">

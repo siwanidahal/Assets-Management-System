@@ -33,7 +33,7 @@ export default function Users() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          "https://2k8mf0hg-8001.inc1.devtunnels.ms/api/user/users/"
+          "http://127.0.0.1:8001//api/user/register/"
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

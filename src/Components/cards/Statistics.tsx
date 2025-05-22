@@ -5,17 +5,18 @@ import { BsPersonFill } from "react-icons/bs";
 import { HiDocumentReport } from "react-icons/hi";
 import { PiKeyReturnBold } from "react-icons/pi";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router";
 
 const Statistics = () => {
-  console.log("hello");
+  const navigate = useNavigate();
   return (
-    <div className="">
+    <div className="bg-gradient-to-r from-[#2A7B9B] via-[#57C785] to-[#9BD16F]">
       <div className="mb-10">
         <Navbar />
       </div>
       <div className="flex flex-wrap justify-center sm:justify-start gap-12 ">
         {/* Card1 */}
-        <div className="w-50 border-2  border-blue-100 p-7 rounded-3xl flex items-center gap-4 shadow-2xl  bg-white hover:border-blue-700">
+        <div className="w-50 border-2  border-blue-100 p-7 rounded-3xl flex items-center gap-4 shadow-2xl  bg-blue-200 hover:border-blue-700">
           <PiGridFour className="text-3xl text-blue-600" />
           <div>
             <h1 className="text-lg font-semibold text-gray-800 ">
@@ -55,11 +56,11 @@ const Statistics = () => {
           <ul className="space-y-8">
             <li className="flex items-center gap-3 text-gray-700 font-medium cursor-pointer hover:text-blue-600 mt-7">
               <RiAddFill className="text-2xl text-blue-600" />
-              Add Asset
+              <p onClick={() => navigate("/assets")}>Add Asset</p>
             </li>
             <li className="flex items-center gap-3 text-gray-700 font-medium cursor-pointer hover:text-blue-600">
               <BsPersonFill className="text-xl text-blue-600" />
-              Assign Asset
+              <p onClick={() => navigate("/assets-out")}>Assign Out</p>
             </li>
             <li className="flex items-center gap-3 text-gray-700 font-medium cursor-pointer hover:text-blue-600">
               <HiDocumentReport className="text-xl text-blue-600" />
