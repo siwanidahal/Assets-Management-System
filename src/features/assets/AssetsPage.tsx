@@ -5,7 +5,6 @@ import { CiSearch } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import axios from "axios";
 interface Asset {
   AssetId: number;
   Name: string;
@@ -126,7 +125,7 @@ export default function Assets() {
   const [showForm, setShowForm] = useState(false);
   const [assetData, setAssetData] = useState<Asset[]>([]);
   const [CategoryData, setCategoryData] = useState<Category[]>([]);
-  const [serachData, setSearchData] = useState("");
+  const [searchData, setSearchData] = useState("");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const page = queryParams.get("page") || "1";
@@ -205,14 +204,14 @@ export default function Assets() {
   };
 
   // Inline edit handler for 3-dot menu
-  const handleEditClick = (assetId: number) => {
-    const assetToEdit = assetData.find((asset) => asset.AssetId === assetId);
-    if (assetToEdit) {
-      setEditingRowId(assetId);
-      setRowEditData(assetToEdit);
-      setShowForm(false); // Hide top form if open
-    }
-  };
+  // const handleEditClick = (assetId: number) => {
+  //   const assetToEdit = assetData.find((asset) => asset.AssetId === assetId);
+  //   if (assetToEdit) {
+  //     setEditingRowId(assetId);
+  //     setRowEditData(assetToEdit);
+  //     setShowForm(false); // Hide top form if open
+  //   }
+  // };
 
   const handleSubmit = async () => {
     try {
@@ -466,7 +465,7 @@ export default function Assets() {
             <tbody className="bg-white divide-y divide-gray-200 ">
               {filterData.length > 0 ? (
                 filterData.map((asset, index) => (
-                filterData.map((asset, index) => (
+                // filterData.map((asset, index) => (
                   <tr
                     key={asset.AssetId}
                     className="hover:bg-gray-50 transition-colors"

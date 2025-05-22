@@ -23,7 +23,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Navbar from "./Navbar";
-import { useNavigate } from "react-router";
 
 function useCountUp(target: number, duration = 1000) {
   const [count, setCount] = useState(0);
