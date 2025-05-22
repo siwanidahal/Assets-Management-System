@@ -5,7 +5,6 @@ import { CiSearch } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
-
 interface Asset {
   AssetId: number;
   Name: string;
@@ -15,11 +14,13 @@ interface Asset {
   Unit: number;
   Description: string;
 }
-
-interface AssetResponse {
+interface TypeTableRes {
   pagination: Pagination;
   status: string;
   message: string;
+  results: unknown[];
+}
+interface AssetResponse extends TypeTableRes {
   results: Asset[];
 }
 
@@ -30,14 +31,16 @@ interface Pagination {
   total_items?: number;
   total_pages?: number;
 }
-
+interface TypeCatgRes extends TypeTableRes {
+  results: Category[];
+}
 interface Category {
   id: number;
   name: string;
 }
 
 const ASSETS_URL =
-  "https://asset-management-system-2y9g.onrender.com/api/assets/";
+  "http://asset-management-system-2y9g.onrender.com/api/assets/";
 
 const Action = ({
   assetId,
@@ -67,7 +70,7 @@ const Action = ({
 
     try {
       await axios.delete(
-        `https://asset-management-system-2y9g.onrender.com/api/assets/${assetId}/`
+        `http://asset-management-system-2y9g.onrender.com/api/assets/${assetId}/`
       );
       window.alert("Asset deleted successfully");
       fetchAssets();
@@ -89,17 +92,17 @@ const Action = ({
         <BsThreeDotsVertical />
       </div>
 
-      {showData === assetId && (
-        <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-50">
+      {showData && (
+        <div className="absolute right-0 mt-2 w-20 bg-white border rounded-lg shadow-lg z-50">
           <button
-            className="block w-full text-left px-4 py-2 hover:bg-green-100"
+            className="block w-full text-left px-4 py-1 text-green-400 hover:bg-gray-100 "
             onClick={() => navigate(`/assets-details/${assetId}`)}
           >
             View
           </button>
           <button
-            className="block w-full text-left px-4 py-2 hover:bg-blue-100"
-            onClick={(e) => {
+            className="block w-full text-left px-4 py-1 text-blue-400 hover:bg-gray-100"
+            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
               e.stopPropagation();
               onEditClick(assetId);
               setShowData(null);
@@ -108,11 +111,8 @@ const Action = ({
             Edit
           </button>
           <button
-            className="block w-full text-left px-4 py-2 hover:bg-red-100"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete();
-            }}
+            className="block w-full text-left px-4 py-1 text-red-400 hover:bg-gray-100"
+            onClick={handleDelete}
           >
             Delete
           </button>
@@ -121,13 +121,11 @@ const Action = ({
     </div>
   );
 };
-
 export default function Assets() {
   const [showForm, setShowForm] = useState(false);
   const [assetData, setAssetData] = useState<Asset[]>([]);
-  const [categoryData, setCategoryData] = useState<Category[]>([]);
+  const [CategoryData, setCategoryData] = useState<Category[]>([]);
   const [searchData, setSearchData] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const page = queryParams.get("page") || "1";
@@ -135,23 +133,29 @@ export default function Assets() {
     current_page: page ? parseInt(page) : 1,
   });
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Asset>({
     AssetId: 0,
     Name: "",
     Shortname: "",
     AssetCategory: 0,
+    AssetCategoryName: "",
     Unit: 0,
     Description: "",
   });
 
-  // Inline edit state
   const [editingRowId, setEditingRowId] = useState<number | null>(null);
   const [rowEditData, setRowEditData] = useState<Partial<Asset>>({});
 
   const fetchAssets = useCallback(async () => {
+    const localToken = localStorage.getItem("token");
+    if (!localToken) throw new Error("no token found in local storage");
+    const token = JSON.parse(localToken);
     try {
-      const response = await fetch(`${ASSETS_URL}?page=${page}`);
+      const response = await fetch(ASSETS_URL + `?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${token.access}`,
+        },
+      });
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
 
@@ -200,14 +204,14 @@ export default function Assets() {
   };
 
   // Inline edit handler for 3-dot menu
-  const handleEditClick = (assetId: number) => {
-    const assetToEdit = assetData.find((asset) => asset.AssetId === assetId);
-    if (assetToEdit) {
-      setEditingRowId(assetId);
-      setRowEditData(assetToEdit);
-      setShowForm(false); // Hide top form if open
-    }
-  };
+  // const handleEditClick = (assetId: number) => {
+  //   const assetToEdit = assetData.find((asset) => asset.AssetId === assetId);
+  //   if (assetToEdit) {
+  //     setEditingRowId(assetId);
+  //     setRowEditData(assetToEdit);
+  //     setShowForm(false); // Hide top form if open
+  //   }
+  // };
 
   const handleSubmit = async () => {
     try {
@@ -226,7 +230,7 @@ export default function Assets() {
       const method = formData.AssetId ? "PUT" : "POST";
 
       const response = await fetch(url, {
-        method,
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -248,12 +252,14 @@ export default function Assets() {
       Name: "",
       Shortname: "",
       AssetCategory: 0,
+      AssetCategoryName: "",
       Unit: 0,
       Description: "",
     });
-    setIsEditing(false);
+    setEditingRowId(null);
     setShowForm(false);
   };
+
 
   const nextPage = () => {
     if (!pagination.has_next) return;
@@ -272,8 +278,28 @@ export default function Assets() {
       .toLowerCase()
       .includes(searchData.toLowerCase())
   );
-
   const pageSize = 10;
+
+  // useEffect(() => {
+  const fetchCategory = async () => {
+    try {
+      const response = await fetch(
+        "http://asset-management-system-2y9g.onrender.com/api/categories/"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: TypeCatgRes = await response.json();
+      console.log("Fetched users:", data);
+      setCategoryData(data?.results);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  // }, []);
+  // Determine if the form is in editing mode
+  const isEditing = formData.AssetId !== 0;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -304,6 +330,7 @@ export default function Assets() {
             onClick={() => {
               resetForm();
               setShowForm(!showForm);
+              fetchCategory();
             }}
             className="text-white bg-teal-500 px-4 py-2 rounded-lg text-sm hover:bg-teal-600"
           >
@@ -316,6 +343,7 @@ export default function Assets() {
             <h2 className="text-xl font-semibold mb-4">
               {isEditing ? "Edit Asset" : "Add New Asset"}
             </h2>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Name</label>
@@ -361,34 +389,35 @@ export default function Assets() {
                 <select
                   name="AssetCategory"
                   value={formData.AssetCategory}
-                  onChange={handleChange}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      AssetCategory: Number(e.target.value),
+                    }))
+                  }
                   className="w-full border border-teal-500 p-2 rounded-lg"
                 >
                   <option value="">Select a Category</option>
-                  {Array.isArray(categoryData) &&
-                    categoryData.map((category) => (
+                  {Array.isArray(CategoryData) &&
+                    CategoryData.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     ))}
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Unit</label>
-                <input
-                  type="number"
-                  name="Unit"
-                  placeholder="Unit"
-                  className="w-full border border-teal-500 p-2 rounded-lg"
-                  value={formData.Unit}
-                  onChange={handleChange}
-                />
-              </div>
               <div className="flex items-end space-x-2">
                 <button
                   onClick={handleSubmit}
                   className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600"
                 >
+                  {isEditing ? "Update" : "Submit"}
+                </button>
+                <button
+                  onClick={resetForm}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                >
+                  Cancel
                   {isEditing ? "Update" : "Submit"}
                 </button>
                 <button
@@ -406,7 +435,11 @@ export default function Assets() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-teal-400 text-white">
               <tr>
+                {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  Asset ID
+                </th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                  SN
                   SN
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase">
@@ -429,9 +462,10 @@ export default function Assets() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 ">
               {filterData.length > 0 ? (
                 filterData.map((asset, index) => (
+                // filterData.map((asset, index) => (
                   <tr
                     key={asset.AssetId}
                     className="hover:bg-gray-50 transition-colors"
@@ -467,7 +501,7 @@ export default function Assets() {
                             className="border p-1 rounded"
                           />
                         </td>
-                        <td className="px-6 py-4 text-sm">
+                        <td className="px-6 py-4 text-sm ">
                           <input
                             type="text"
                             value={rowEditData.Description ?? asset.Description}
@@ -478,6 +512,7 @@ export default function Assets() {
                               }))
                             }
                             className="border p-1 rounded"
+                            //line-clamp-2 leading-5
                           />
                         </td>
                         <td className="px-6 py-4 text-sm">
@@ -507,8 +542,8 @@ export default function Assets() {
                             className="border p-1 rounded"
                           >
                             <option value="">Select a Category</option>
-                            {Array.isArray(categoryData) &&
-                              categoryData.map((category) => (
+                            {Array.isArray(CategoryData) &&
+                              CategoryData.map((category: Category) => (
                                 <option key={category.id} value={category.id}>
                                   {category.name}
                                 </option>
@@ -536,7 +571,7 @@ export default function Assets() {
                                 setEditingRowId(null);
                                 setRowEditData({});
                                 fetchAssets();
-                              } catch (err) {
+                              } catch {
                                 alert("Failed to update asset");
                               }
                             }}
@@ -560,7 +595,7 @@ export default function Assets() {
                           {asset.Name}
                         </td>
                         <td className="px-6 py-4 text-sm">{asset.Shortname}</td>
-                        <td className="px-6 py-4 text-sm line-clamp-1 leading-5">
+                        <td className="px-5 py-1 text-sm line-clamp-1 leading-7">
                           {asset.Description}
                         </td>
                         <td className="px-6 py-4 text-sm">{asset.Unit}</td>
@@ -568,19 +603,14 @@ export default function Assets() {
                           {asset.AssetCategoryName}
                         </td>
                         <td className="px-6 py-4 text-sm relative flex gap-2">
-                          {/* <button
-                            className="bg-blue-500 text-white px-2 py-1 rounded"
-                            onClick={() => {
-                              setEditingRowId(asset.AssetId);
-                              setRowEditData(asset);
-                            }}
-                          >
-                            Inline Edit
-                          </button> */}
                           <Action
                             assetId={asset.AssetId}
                             fetchAssets={fetchAssets}
-                            onEditClick={handleEditClick}
+                            onEditClick={(id: number) => {
+                              setEditingRowId(id);
+                              setRowEditData(asset);
+                              fetchCategory();
+                            }}
                           />
                         </td>
                       </>

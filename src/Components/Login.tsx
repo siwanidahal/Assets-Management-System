@@ -17,20 +17,19 @@ export default function Login() {
     };
 
     try {
-      const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://2k8mf0hg-8001.inc1.devtunnels.ms/api/user/login/",
+        "https://asset-management-system-2y9g.onrender.com/api/user/login/",
         JSON.stringify(formData),
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       if (response?.data?.token) {
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("user", JSON.stringify(response.data.user));
         window.alert("Login Successful");
         navigate("/");
       }
@@ -52,10 +51,10 @@ export default function Login() {
             <p className="mb-6">Don't have an account?</p>
             <button
               type="button"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate("/login")}
               className="border border-white px-6 py-2 rounded-full font-semibold hover:bg-white hover:text-blue-500 transition"
             >
-              Register
+              Login
             </button>
           </div>
 

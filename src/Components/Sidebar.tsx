@@ -1,11 +1,13 @@
+
 // import { TbLayoutDashboardFilled } from "react-icons/tb";
 // import { FaAssistiveListeningSystems, FaUserFriends } from "react-icons/fa";
-// import { IoMdCheckbox } from "react-icons/io";
-// import { MdAssignmentInd } from "react-icons/md";
+// // import { IoMdCheckbox } from "react-icons/io";
+// // import { MdAssignmentInd } from "react-icons/md";
 // import { TbCategoryPlus } from "react-icons/tb";
 // import { RiLayoutGridLine } from "react-icons/ri";
 // import { Link } from "react-router";
 // import { FaBoxOpen } from "react-icons/fa";
+import { RiAddLargeLine } from "react-icons/ri";
 // const sideLinks = [
 //   {
 //     name: "Dashboard",
@@ -112,6 +114,11 @@ const sideLinks = [
     link: "/assets-out",
     icon: FaAssistiveListeningSystems,
   },
+  {
+    name: "Create NewUser",
+    link: "/newUsers",
+    icon: RiAddLargeLine,
+  },
 ];
 
 const Sidebar = () => {
@@ -143,21 +150,21 @@ const Sidebar = () => {
                 className={`group flex items-center w-full gap-3 px-3 py-2 rounded-lg transition-all duration-200
                   ${
                     isActive
-                      ? "bg-blue-100 text-blue-700 font-semibold shadow"
-                      : "hover:bg-blue-50 hover:text-blue-600 text-gray-700"
+                      ? "bg-blue-100 text-green-400 font-semibold shadow"
+                      : "hover:bg-blue-50 hover:text-green-200 text-gray-700"
                   }`}
                 title={l.name}
               >
                 <span
-                  className={`text-xl transition-transform duration-200 group-hover:scale-125 group-hover:text-blue-500 ${
-                    isActive ? "text-blue-700" : ""
+                  className={`text-xl transition-transform duration-200 group-hover:scale-125 group-hover:text-green-200 ${
+                    isActive ? "text-green-400" : ""
                   }`}
                 >
                   <l.icon />
                 </span>
                 <span className="hidden md:inline">{l.name}</span>
                 {/* Tooltip for mobile */}
-                <span className="md:hidden absolute left-16 bg-blue-700 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
+                <span className="md:hidden absolute left-16 bg-green-400 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition pointer-events-none z-10">
                   {l.name}
                 </span>
               </Link>
