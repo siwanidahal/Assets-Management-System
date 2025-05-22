@@ -81,6 +81,7 @@ const Navbar = () => {
             </div>
           )}
         </div>
+        {/* <CiUser className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-600 text-xl" /> */}
       </div>
     </div>
   );

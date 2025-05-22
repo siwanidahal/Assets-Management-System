@@ -1,3 +1,5 @@
+//12344
+import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router";
@@ -126,7 +128,6 @@ export default function Assets() {
   const [CategoryData, setCategoryData] = useState<Category[]>([]);
   const [serachData, setSearchData] = useState("");
   const location = useLocation();
-  console.log(location);
   const queryParams = new URLSearchParams(location.search);
   const page = queryParams.get("page") || "1";
   const [pagination, setPagination] = useState<Pagination>({
@@ -160,22 +161,57 @@ export default function Assets() {
         throw new Error(`HTTP error! status: ${response.status}`);
 
       const data: AssetResponse = await response.json();
-
       setAssetData(data.results);
       setPagination(data.pagination);
     } catch (error) {
       console.error("Error fetching assets:", error);
     }
   }, [page]);
+
   useEffect(() => {
     fetchAssets();
   }, [fetchAssets]);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        "https://asset-management-system-2y9g.onrender.com/api/categories/"
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: Category[] = await response.json();
+      setCategoryData(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "Unit" || name === "AssetId" ? Number(value) : value,
+      [name]:
+        name === "Unit" || name === "AssetId" || name === "AssetCategory"
+          ? Number(value)
+          : value,
     }));
+  };
+
+  // Inline edit handler for 3-dot menu
+  const handleEditClick = (assetId: number) => {
+    const assetToEdit = assetData.find((asset) => asset.AssetId === assetId);
+    if (assetToEdit) {
+      setEditingRowId(assetId);
+      setRowEditData(assetToEdit);
+      setShowForm(false); // Hide top form if open
+    }
   };
 
   const handleSubmit = async () => {
@@ -202,7 +238,7 @@ export default function Assets() {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Failed to post data");
+      if (!response.ok) throw new Error("Failed to save data");
 
       await fetchAssets();
       resetForm();
@@ -225,20 +261,23 @@ export default function Assets() {
     setShowForm(false);
   };
 
+
   const nextPage = () => {
     if (!pagination.has_next) return;
     const nPage = pagination.current_page + 1;
     navigate(`/assets?page=${nPage}`);
   };
+
   const prevPage = () => {
     if (!pagination.has_previous) return;
     const nPage = pagination.current_page - 1;
     navigate(`/assets?page=${nPage}`);
   };
+
   const filterData = assetData.filter((asset) =>
     `${asset.Name} ${asset.Shortname}`
       .toLowerCase()
-      .includes(serachData.toLowerCase())
+      .includes(searchData.toLowerCase())
   );
   const pageSize = 10;
 
@@ -266,13 +305,13 @@ export default function Assets() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="flex flex-col sm:flex-row justify-between items-center p-6 ">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-6">
           <div className="flex items-center">
             <button
               onClick={() => navigate("/")}
               className="mr-4 p-2 rounded-lg hover:bg-gray-100"
             >
-              <IoArrowBackCircleSharp className="text-2xl text-black-500 " />
+              <IoArrowBackCircleSharp className="text-2xl text-black-500" />
             </button>
           </div>
           <h1 className="text-2xl font-bold text-teal-500 mb-4 sm:mb-0">
@@ -282,7 +321,7 @@ export default function Assets() {
             <input
               type="text"
               placeholder="Search assets..."
-              value={serachData}
+              value={searchData}
               onChange={(e) => setSearchData(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
@@ -296,7 +335,7 @@ export default function Assets() {
             }}
             className="text-white bg-teal-500 px-4 py-2 rounded-lg text-sm hover:bg-teal-600"
           >
-            {showForm ? "X" : "Add Asset"}
+            {showForm ? "Cancel" : "Add Asset"}
           </button>
         </div>
 
@@ -368,11 +407,18 @@ export default function Assets() {
                     ))}
                 </select>
               </div>
-              <div className="flex items-end">
+              <div className="flex items-end space-x-2">
                 <button
                   onClick={handleSubmit}
-                  className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-500"
+                  className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600"
                 >
+                  {isEditing ? "Update" : "Submit"}
+                </button>
+                <button
+                  onClick={resetForm}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                >
+                  Cancel
                   {isEditing ? "Update" : "Submit"}
                 </button>
                 <button
@@ -395,29 +441,31 @@ export default function Assets() {
                 </th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   SN
+                  SN
                 </th>
-                <th className="px-6 py-3 text-left  text-xs font-medium uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Asset Name
                 </th>
-                <th className="px-6 py-3 text-left  text-xs font-medium uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Short Name
                 </th>
-                <th className="px-6 py-3 text-left   text-xs font-medium uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Description
                 </th>
-                <th className="px-6 py-3 text-left  text-xs font-medium uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Unit
                 </th>
-                <th className="px-6 py-3 text-left  text-xs font-medium uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Asset Category
                 </th>
-                <th className="px-6 py-3 text-left   text-xs font-medium uppercase">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 ">
               {filterData.length > 0 ? (
+                filterData.map((asset, index) => (
                 filterData.map((asset, index) => (
                   <tr
                     key={asset.AssetId}
@@ -572,8 +620,8 @@ export default function Assets() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="text-center py-4 text-gray-500">
-                    No users found.
+                  <td colSpan={7} className="text-center py-4 text-gray-500">
+                    No assets found.
                   </td>
                 </tr>
               )}
