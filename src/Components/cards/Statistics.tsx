@@ -104,14 +104,6 @@ const Statistics = () => {
     .filter((a) => a.message.toLowerCase().includes(search.toLowerCase()))
     .sort(() => (filter === "latest" ? -1 : 1));
 
-  // useEffect(() => {
-  //   if (darkMode) {
-  //     document.documentElement.classList.add("dark");
-  //   } else {
-  //     document.documentElement.classList.remove("dark");
-  //   }
-  // }, [darkMode]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-emerald-100 dark:from-gray-400 dark:via-slate-300 dark:to-blue-750 transition-colors duration-500">
       <Navbar />
