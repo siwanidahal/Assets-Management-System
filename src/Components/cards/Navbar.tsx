@@ -3,7 +3,7 @@ import { CiSearch } from "react-icons/ci";
 const Navbar = () => {
   return (
     <>
-      <div className="w-full bg-gradient-to-r from-[rgba(32,109,133,1)] via-[rgba(112,197,174,1)] to-[rgba(109,204,78,1)] py-5 px-6">
+      <div className="w-full  dark:bg-green-900  bg-gradient-to-r from-[rgba(32,109,133,1)] via-[rgba(112,197,174,1)] to-[rgba(109,204,78,1)] py-5 px-6">
         <div className="flex ml-10 md:ml-40 justify-between items-center ">
           <div className="relative w-full max-w-md ">
             <input
@@ -13,10 +13,11 @@ const Navbar = () => {
             />
             <CiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 text-xl" />
           </div>
-          <div className="ml-4 text-white font-medium whitespace-nowrap">
-            Welcome User
-          </div>
+          <button className="ml-4 text-white font-medium whitespace-nowrap">
+            👤welcome User
+          </button>
         </div>
+        {/* <CiUser className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-600 text-xl" /> */}
       </div>
     </>
   );

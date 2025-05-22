@@ -33,13 +33,14 @@ export default function Users() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          "https://2k8mf0hg-8001.inc1.devtunnels.ms/api/user/users/"
+          "https://asset-management-system-2y9g.onrender.com/api/user/users/"
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data: Users[] = await response.json();
-        setUserData(data);
+        // setUserData(data);
+        setUserData(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
