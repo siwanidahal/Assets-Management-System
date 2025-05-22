@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import Login from "./Components/Login";
-import Register from "./Components/Register";
+// import Register from "./Components/Register";
 // import Sidebar from "./Components/Sidebar";
 import App from "./App";
 import Assets from "./features/assets/AssetsPage";
@@ -9,6 +9,7 @@ import Categories from "./Components/Categories";
 import Users from "./Components/Users";
 import AssetsOut from "./pages/AssetsOut";
 import AssetDetailsPage from "./features/assetsDetails/AssetDetailsPage";
+import NewUsers from "./Components/Register";
 
 export const router = createBrowserRouter([
   {
@@ -16,8 +17,8 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/register",
-    element: <Register />,
+    path: "/newUsers",
+    element: <NewUsers />,
   },
   {
     path: "/",
@@ -34,9 +35,9 @@ export const router = createBrowserRouter([
             index: true,
             element: <Assets />,
           },
-          
         ],
       },
+
       {
         path: "/users",
         element: <Users />,
@@ -47,11 +48,10 @@ export const router = createBrowserRouter([
         element: <Categories />,
       },
       {
-
         path: "/assets-details",
         element: <AssetDetailsPage />,
       },
-          
+
       {
         path: "/assets-out",
         element: <AssetsOut />,

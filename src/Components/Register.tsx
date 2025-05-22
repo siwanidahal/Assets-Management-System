@@ -1,9 +1,10 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { useNavigate } from "react-router";
 
-export default function Register() {
+export default function NewUsers() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function Register() {
     console.log("form data", formData);
     try {
       const response = await axios.post(
-        "https://2k8mf0hg-8001.inc1.devtunnels.ms/api/user/register/",
+        "https://asset-management-system-2y9g.onrender.com/api/user/register/",
         JSON.stringify(formData),
         {
           headers: {
@@ -35,7 +36,7 @@ export default function Register() {
       );
       console.log(response.data);
       window.alert("Registration Successfull");
-      navigate("/login");
+      // navigate("/login");
     } catch (error) {
       console.log(error);
       window.alert("Registration Failed");
@@ -44,13 +45,21 @@ export default function Register() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-4/5 max-w-6xl flex shadow-2xl rounded-xl bg-white overflow-hidden">
+      <div className="w-6/5 max-w-6xl flex shadow-2xl rounded-xl bg-white overflow-hidden items-center justify-center ">
+        <div className="flex items-start">
+          <button
+            onClick={() => navigate("/")}
+            className="mr-4 p-2 rounded-lg hover:bg-gray-100"
+          >
+            <IoArrowBackCircleSharp className="text-2xl text-black-500" />
+          </button>
+        </div>
         {/* Right Form Section */}
-        <div className="w-1/2 bg-white p-10 flex flex-col justify-center">
-          <h1 className="text-3xl font-bold text-center mb-6">
-            Create Account
+        <div className="w-2/3 bg-white p-10 flex flex-col justify-center ">
+          <h1 className="text-3xl font-bold text-center mb-6 underline">
+            Create NewUsers
           </h1>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <InputComp
               label="UserName"
               type="text"
@@ -139,7 +148,7 @@ export default function Register() {
         </div>
 
         {/* Left Purple Gradient Panel */}
-        <div className="w-1/2 bg-teal-500 text-white flex flex-col justify-center items-center p-10 rounded-l-[80%] rounded-tl-full  transition-all duration-700 ease-in-out">
+        {/* <div className="w-1/2 bg-teal-500 text-white flex flex-col justify-center items-center p-10 rounded-l-[80%] rounded-tl-full  transition-all duration-700 ease-in-out">
           <h2 className="text-4xl font-bold mb-6">Welcome!</h2>
           <p className="text-lg text-center leading-6">
             Join us and enjoy seamless experience. Let's get you registered!
@@ -152,7 +161,7 @@ export default function Register() {
           >
             Login
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
