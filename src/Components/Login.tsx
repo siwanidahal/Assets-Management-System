@@ -1,7 +1,7 @@
-import axios from "axios";
 import { FormEvent, useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);

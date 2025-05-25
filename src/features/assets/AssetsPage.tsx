@@ -1,10 +1,10 @@
-//12344
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { api } from "@/lib/api";
 interface Asset {
   AssetId: number;
   Name: string;
@@ -39,8 +39,7 @@ interface Category {
   name: string;
 }
 
-const ASSETS_URL =
-  "http://asset-management-system-2y9g.onrender.com/api/assets/";
+const ASSETS_URL = "/assets/";
 
 const Action = ({
   assetId,
@@ -147,19 +146,11 @@ export default function Assets() {
   const [rowEditData, setRowEditData] = useState<Partial<Asset>>({});
 
   const fetchAssets = useCallback(async () => {
-    const localToken = localStorage.getItem("token");
-    if (!localToken) throw new Error("no token found in local storage");
-    const token = JSON.parse(localToken);
     try {
-      const response = await fetch(ASSETS_URL + `?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${token.access}`,
-        },
-      });
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const { data }: { data: AssetResponse } = await api.get(
+        ASSETS_URL + `?page=${page}`
+      );
 
-      const data: AssetResponse = await response.json();
       setAssetData(data.results);
       setPagination(data.pagination);
     } catch (error) {
@@ -173,14 +164,8 @@ export default function Assets() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(
-        "https://asset-management-system-2y9g.onrender.com/api/categories/"
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data: Category[] = await response.json();
-      setCategoryData(data);
+      const { data }: { data: TypeCatgRes } = await api.get("/categories/");
+      setCategoryData(data.results);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -203,13 +188,36 @@ export default function Assets() {
     }));
   };
 
-  // Inline edit handler for 3-dot menu
-  // const handleEditClick = (assetId: number) => {
-  //   const assetToEdit = assetData.find((asset) => asset.AssetId === assetId);
-  //   if (assetToEdit) {
-  //     setEditingRowId(assetId);
-  //     setRowEditData(assetToEdit);
-  //     setShowForm(false); // Hide top form if open
+  // const handleSubmit = async () => {
+  //   try {
+  //     const payload = {
+  //       Name: formData.Name,
+  //       Shortname: formData.Shortname,
+  //       Description: formData.Description,
+  //       Unit: String(formData.Unit),
+  //       AssetCategory: formData.AssetCategory,
+  //     };
+
+  //     const url = formData.AssetId
+  //       ? `${ASSETS_URL}${formData.AssetId}/`
+  //       : ASSETS_URL;
+
+  //     const method = formData.AssetId ? "PUT" : "POST";
+
+  //     const response = await fetch(url, {
+  //       method: method,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     if (!response.ok) throw new Error("Failed to save data");
+
+  //     await fetchAssets();
+  //     resetForm();
+  //   } catch (error) {
+  //     console.error("Error saving asset:", error);
   //   }
   // };
 
@@ -223,21 +231,13 @@ export default function Assets() {
         AssetCategory: formData.AssetCategory,
       };
 
-      const url = formData.AssetId
-        ? `${ASSETS_URL}${formData.AssetId}/`
-        : ASSETS_URL;
-
-      const method = formData.AssetId ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) throw new Error("Failed to save data");
+      if (formData.AssetId) {
+        // Update
+        await api.put(`/assets/${formData.AssetId}/`, payload);
+      } else {
+        // Create
+        await api.post("/assets/", payload);
+      }
 
       await fetchAssets();
       resetForm();
@@ -245,7 +245,6 @@ export default function Assets() {
       console.error("Error saving asset:", error);
     }
   };
-
   const resetForm = () => {
     setFormData({
       AssetId: 0,
@@ -259,7 +258,6 @@ export default function Assets() {
     setEditingRowId(null);
     setShowForm(false);
   };
-
 
   const nextPage = () => {
     if (!pagination.has_next) return;
@@ -281,19 +279,28 @@ export default function Assets() {
   const pageSize = 10;
 
   // useEffect(() => {
+  // const fetchCategory = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "http://asset-management-system-2y9g.onrender.com/api/categories/"
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  //     const data: TypeCatgRes = await response.json();
+  //     console.log("Fetched users:", data);
+  //     setCategoryData(data?.results);
+  //   } catch (error) {
+  //     console.error("Error fetching users:", error);
+  //   }
+  // };
+
   const fetchCategory = async () => {
     try {
-      const response = await fetch(
-        "http://asset-management-system-2y9g.onrender.com/api/categories/"
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data: TypeCatgRes = await response.json();
-      console.log("Fetched users:", data);
-      setCategoryData(data?.results);
+      const { data }: { data: TypeCatgRes } = await api.get("/categories/");
+      setCategoryData(data.results);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching categories:", error);
     }
   };
 
@@ -439,8 +446,7 @@ export default function Assets() {
                   Asset ID
                 </th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase">
-                  SN
-                  SN
+                  SN SN
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Asset Name
@@ -465,7 +471,7 @@ export default function Assets() {
             <tbody className="bg-white divide-y divide-gray-200 ">
               {filterData.length > 0 ? (
                 filterData.map((asset, index) => (
-                // filterData.map((asset, index) => (
+                  // filterData.map((asset, index) => (
                   <tr
                     key={asset.AssetId}
                     className="hover:bg-gray-50 transition-colors"
@@ -555,18 +561,10 @@ export default function Assets() {
                             className="bg-teal-500 text-white px-2 py-1 rounded"
                             onClick={async () => {
                               try {
-                                await fetch(`${ASSETS_URL}${asset.AssetId}/`, {
-                                  method: "PUT",
-                                  headers: {
-                                    "Content-Type": "application/json",
-                                  },
-                                  body: JSON.stringify({
-                                    ...asset,
-                                    ...rowEditData,
-                                    Unit: String(
-                                      rowEditData.Unit ?? asset.Unit
-                                    ),
-                                  }),
+                                await api.put(`/assets/${asset.AssetId}/`, {
+                                  ...asset,
+                                  ...rowEditData,
+                                  Unit: String(rowEditData.Unit ?? asset.Unit),
                                 });
                                 setEditingRowId(null);
                                 setRowEditData({});

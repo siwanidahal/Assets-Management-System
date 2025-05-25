@@ -1,4 +1,5 @@
-import axios from "axios";
+import { api } from "@/lib/api";
+// import axios from "axios";
 import { FormEvent, useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
@@ -25,8 +26,8 @@ export default function NewUsers() {
     };
     console.log("form data", formData);
     try {
-      const response = await axios.post(
-        "https://asset-management-system-2y9g.onrender.com/api/user/register/",
+      const response = await api.post(
+        "/user/register/",
         JSON.stringify(formData),
         {
           headers: {
@@ -44,8 +45,8 @@ export default function NewUsers() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-6/5 max-w-6xl flex shadow-2xl rounded-xl bg-white overflow-hidden items-center justify-center ">
+    <div className="flex justify-center items-center min-h-screen bg-background text-foreground">
+      <div className="w-6/5 max-w-6xl flex shadow-2xl rounded-xl bg-card/50  text-card-foreground overflow-hidden items-center justify-center ">
         <div className="flex items-start">
           <button
             onClick={() => navigate("/")}
@@ -55,7 +56,7 @@ export default function NewUsers() {
           </button>
         </div>
         {/* Right Form Section */}
-        <div className="w-2/3 bg-white p-10 flex flex-col justify-center ">
+        <div className="w-2/3 bg-card text-card-foreground p-10 flex flex-col justify-center ">
           <h1 className="text-3xl font-bold text-center mb-6 underline">
             Create NewUsers
           </h1>
@@ -179,7 +180,7 @@ function InputComp({
       <input
         type={type}
         placeholder={placeholder}
-        className="border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-teal-500"
+        className="border border-gray-400 rounded-md p-2 text-foreground focus:outline-none focus:ring-1 focus:ring-teal-500"
         {...rest}
       />
     </div>

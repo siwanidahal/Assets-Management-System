@@ -56,7 +56,7 @@ const sideLinks = [
     icon: FaAssistiveListeningSystems,
   },
   {
-    name: "Create NewUser",
+    name: "Create Newuser",
     link: "/newUsers",
     icon: RiAddLargeLine,
   },

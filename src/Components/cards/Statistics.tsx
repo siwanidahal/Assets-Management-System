@@ -23,6 +23,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router";
 
 function useCountUp(target: number, duration = 1000) {
   const [count, setCount] = useState(0);
@@ -87,6 +88,7 @@ const Statistics = () => {
   // const [darkMode, setDarkMode] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("latest");
+  const navigate = useNavigate();
 
   // Always generate a new key on every render for PieChart animation on refresh
   const chartKey = Date.now();
@@ -254,13 +256,17 @@ const Statistics = () => {
                   <span className="bg-green-100 dark:bg-green-900 p-2 rounded-full group-hover:bg-green-200 dark:group-hover:bg-green-800 transition">
                     <RiAddFill className="text-2xl text-green-600" />
                   </span>
-                  <span className="font-medium">Add Asset</span>
+                  <span className="font-medium">
+                    <p onClick={() => navigate("/assets")}>Add Asset</p>
+                  </span>
                 </li>
                 <li className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-600 cursor-pointer transition group">
                   <span className="bg-green-100 dark:bg-green-900 p-2 rounded-full group-hover:bg-green-200 dark:group-hover:bg-green-800 transition">
                     <BsPersonFill className="text-xl text-green-600" />
                   </span>
-                  <span className="font-medium">Assign Asset</span>
+                  <span className="font-medium">
+                    <p onClick={() => navigate("/assets-out")}>Assign Asset</p>
+                  </span>
                 </li>
                 <li className="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:text-green-600 cursor-pointer transition group">
                   <span className="bg-green-100 dark:bg-green-900 p-2 rounded-full group-hover:bg-green-200 dark:group-hover:bg-green-800 transition">
