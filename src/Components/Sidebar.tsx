@@ -1,4 +1,3 @@
-
 // import { TbLayoutDashboardFilled } from "react-icons/tb";
 // import { FaAssistiveListeningSystems, FaUserFriends } from "react-icons/fa";
 // // import { IoMdCheckbox } from "react-icons/io";
@@ -115,7 +114,7 @@ const sideLinks = [
     icon: FaAssistiveListeningSystems,
   },
   {
-    name: "Create NewUser",
+    name: "Create Newuser",
     link: "/newUsers",
     icon: RiAddLargeLine,
   },
@@ -134,7 +133,7 @@ const Sidebar = () => {
     >
       <ModeToggle />
       <div className="px-4 pt-10 ">
-        <h1 className="text-2xl font-bold tracking-tight text-blue-700 drop-shadow mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-green-400 drop-shadow mb-8">
           <span className="hidden md:flex leading-tight">
             Assets <br /> Management
           </span>
