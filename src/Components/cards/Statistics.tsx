@@ -105,7 +105,7 @@ const Statistics = () => {
     .sort(() => (filter === "latest" ? -1 : 1));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-emerald-100 dark:from-gray-400 dark:via-slate-300 dark:to-blue-750 transition-colors duration-500">
+    <div className="min-h-screen py-6 bg-gradient-to-br from-blue-50 via-cyan-50 to-emerald-100 dark:from-gray-400 dark:via-slate-300 dark:to-blue-750 transition-colors duration-500">
       <Navbar />
       {/* Top Controls */}
 
@@ -132,9 +132,9 @@ const Statistics = () => {
       </div>
       {/* Stats Cards */}
 
-      <div className="flex flex-row justify-center sm:justify-start gap-8 mt-10 px-6">
+      <div className="flex  px-15 gap-30 mt-10 ">
         {/* Total Assets */}
-        <Card className="w-64 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80">
+        <Card className="w-70 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80">
           <CardHeader>
             <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-400 blur opacity-40 group-hover:opacity-80 transition" />
             <div className="flex items-center gap-4">
@@ -167,7 +167,7 @@ const Statistics = () => {
           </CardFooter>
         </Card>
         {/* Assigned Assets */}
-        <Card className="w-64 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80">
+        <Card className="w-70 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80">
           <CardHeader>
             <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-400 blur opacity-40 group-hover:opacity-80 transition" />
             <div className="flex items-center gap-4">
@@ -200,7 +200,7 @@ const Statistics = () => {
           </CardFooter>
         </Card>
         {/* Maintenance Assets */}
-        <Card className="w-64 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80">
+        <Card className="w-70 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80">
           <CardHeader>
             <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-400 blur opacity-40 group-hover:opacity-80 transition" />
             <div className="flex items-center gap-4">
@@ -236,13 +236,13 @@ const Statistics = () => {
 
       <div>
         {/* Main Content */}
-        <div className="flex gap-8 mt-30 px-6">
+        <div className="flex  gap-30 mt-30 px-15 mb-10">
           {/* Quick Actions */}
-          <Card className="w-80 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80 rounded-2xl shadow-xl hover:shadow-2xl transition flex flex-col">
+          <Card className=" w-80 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80 rounded-2xl shadow-xl hover:shadow-2xl transition flex flex-col">
             <CardHeader>
               <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-400 blur opacity-40 group-hover:opacity-80 transition" />
               <div className="flex items-center gap-4">
-                <RiAddFill className="text-3xl text-green-600 drop-shadow-lg" />
+                <RiAddFill className="text-3xl text-green dark:text-white drop-shadow-lg" />
                 <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   Quick Actions
                 </h1>
@@ -319,7 +319,7 @@ const Statistics = () => {
           </Card>
 
           {/* Charts */}
-          <Card className="w-100 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80 rounded-2xl shadow-xl hover:shadow-2xl transition flex flex-col px-2">
+          <Card className="w-80 bg-gradient-to-br from-green-100 via-green-50 to-white dark:from-teal-900 dark:via-teal-800 dark:to-black/80 rounded-2xl shadow-xl hover:shadow-2xl transition flex flex-col px-2">
             <CardHeader>
               <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-400 blur opacity-40 group-hover:opacity-80 transition" />
               <div className="flex items-center gap-4">

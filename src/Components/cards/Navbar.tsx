@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-gradient-to-r from-[rgba(32,109,133,1)] via-[rgba(112,197,174,1)] to-[rgba(109,204,78,1)] py-5 ">
+    <div className=" bg-gradient-to-r from-[rgba(32,109,133,1)] via-[rgba(112,197,174,1)] to-[rgba(109,204,78,1)] py-3 ">
       <div className="flex ml-10 md:ml-40 justify-between items-center relative">
         {/* <div className="flex items-start px-4 ">
           <MdMenu />
