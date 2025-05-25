@@ -9,7 +9,7 @@ import {
 import { TbCategoryPlus } from "react-icons/tb";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { Link } from "react-router";
-import { ModeToggle } from "./theme-switch";
+
 import logo from "../assets/logo.png";
 import { RiAddLargeLine } from "react-icons/ri";
 
@@ -83,7 +83,7 @@ const Sidebar = () => {
       >
         <HamburgerIcon />
       </button>
-      <ModeToggle />
+    
       <div className={`pt-1 ${collapsed ? "px-2" : "px-2"}`}>
         <div
           className={`flex gap-2 mt-10 mb-10 ${
