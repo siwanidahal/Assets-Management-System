@@ -1,15 +1,15 @@
 
 const LogoutPage = () => {
   const handleCancel = () => {
-    // Redirect to homepage or dashboard
-    window.location.href = "/"; // Change to your actual home/dashboard route
+    
+    window.location.href = "/"; 
   };
 
   const handleLogout = () => {
-    // Example: Clear token and redirect to login
+   
     localStorage.removeItem("authToken");
     alert("You have been logged out.");
-    window.location.href = "/login"; // Change to your actual login route
+    window.location.href = "/login"; 
   };
 
   return (

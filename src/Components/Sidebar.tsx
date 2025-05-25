@@ -134,7 +134,7 @@ const Sidebar = () => {
     >
       <ModeToggle />
       <div className="px-4 pt-10 ">
-        <h1 className="text-2xl font-bold tracking-tight text-blue-700 drop-shadow mb-8">
+        <h1 className="text-2xl font-semibold text-teal-500  mb-8">
           <span className="hidden md:flex leading-tight">
             Assets <br /> Management
           </span>

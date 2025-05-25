@@ -1,7 +1,7 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import { IoArrowBackCircleSharp } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router";
 
 export default function NewUsers() {
@@ -49,9 +49,9 @@ export default function NewUsers() {
         <div className="flex items-start">
           <button
             onClick={() => navigate("/")}
-            className="mr-4 p-2 rounded-lg hover:bg-gray-100"
+            className="mr-4 p-2 rounded-full bg-white shadow"
           >
-            <IoArrowBackCircleSharp className="text-2xl text-black-500" />
+            <IoArrowBack className="text-2xl text-black-500 font-light " />
           </button>
         </div>
         {/* Right Form Section */}

@@ -116,6 +116,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  input {
+    @apply focus-visible:outline-teal-500;
+  }
 }
 .tabledata {
   border-right-width: 2px;
