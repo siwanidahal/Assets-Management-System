@@ -244,7 +244,7 @@ const Statistics = () => {
             <CardHeader>
               <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-green-400 blur opacity-40 group-hover:opacity-80 transition" />
               <div className="flex items-center gap-4">
-                <RiAddFill className="text-3xl text-green dark:text-white drop-shadow-lg" />
+                <RiAddFill className="text-3xl text-green-600 dark:text-white drop-shadow-lg" />
                 <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   Quick Actions
                 </h1>

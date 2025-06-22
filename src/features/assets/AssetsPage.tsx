@@ -2,7 +2,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router";
-import { IoArrowBackCircleSharp } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { api } from "@/lib/api";
 interface Asset {
@@ -315,9 +315,9 @@ export default function Assets() {
           <div className="flex items-center">
             <button
               onClick={() => navigate("/")}
-              className="mr-4 p-2 rounded-lg hover:bg-gray-100"
+              className="mr-4 p-2 rounded-full bg-white shadow"
             >
-              <IoArrowBackCircleSharp className="text-2xl text-black-500" />
+              <IoArrowBack className="text-2xl text-black-500 font-light" />
             </button>
           </div>
           <h1 className="text-2xl font-bold text-teal-500 mb-4 sm:mb-0">
@@ -427,12 +427,10 @@ export default function Assets() {
                   Cancel
                   {isEditing ? "Update" : "Submit"}
                 </button>
-                <button
+                {/* <button
                   onClick={resetForm}
                   className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
+                >Cancel</button> */}
               </div>
             </div>
           </div>
@@ -446,7 +444,7 @@ export default function Assets() {
                   Asset ID
                 </th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase">
-                  SN SN
+                  SN
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                   Asset Name
