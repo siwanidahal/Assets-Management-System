@@ -11,6 +11,7 @@ import AssetsOut from "./pages/AssetsOut";
 import AssetDetailsPage from "./features/assetsDetails/AssetDetailsPage";
 import NewUsers from "./Components/Register";
 import LogoutPage from "./Components/Logout";
+import MaintenanceTable from "./Components/Maintenence";
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +61,11 @@ export const router = createBrowserRouter([
       {
         path: "/assets-out",
         element: <AssetsOut />,
+      },
+
+      {
+        path: "/maintenance",
+        element: <MaintenanceTable />,
       },
     ],
   },

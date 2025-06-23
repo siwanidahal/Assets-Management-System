@@ -427,12 +427,6 @@ export default function Assets() {
                   Cancel
                   {isEditing ? "Update" : "Submit"}
                 </button>
-                <button
-                  onClick={resetForm}
-                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
               </div>
             </div>
           </div>

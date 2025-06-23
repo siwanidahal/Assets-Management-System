@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
+import { api } from "@/lib/api";
 
 interface Row {
   id: number;
@@ -14,24 +15,16 @@ interface Row {
 }
 
 interface Asset {
-  Sn: number;
   Asset: number;
   AssetCode: string;
-  Price: number;
-  PurchaseDate: string;
-  Remarks: string;
-  Status: string;
   AssetName: string;
 }
 
 interface User {
   id: number;
   username: string;
-  email: string;
   first_name: string;
   last_name: string;
-  phone_number: string | null;
-  address: string | null;
 }
 
 interface Pagination {
@@ -55,8 +48,16 @@ function getAssetCode(assetId: string | number, assets: Asset[]) {
   return asset ? asset.AssetCode : String(assetId);
 }
 
-export default function AssetTable() {
+const ASSET_OUT_URL = "/asset-out/";
+const ASSET_DETAILS_URL = "/asset-details/";
+const USERS_URL = "/user/users/";
+
+export default function AssetOutPage() {
   const [rows, setRows] = useState<Row[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [pagination, setPagination] = useState<Pagination>({ current_page: 1 });
+  const [searchTerm, setSearchTerm] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formData, setFormData] = useState({
     Outdate: "",
@@ -66,10 +67,6 @@ export default function AssetTable() {
     AssetDetail: "",
     OutTo: "",
   });
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({ current_page: 1 });
-  const [searchTerm, setSearchTerm] = useState("");
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const [filteredRows, setFilteredRows] = useState<Row[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -77,22 +74,16 @@ export default function AssetTable() {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const page = queryParams.get("page");
+  const page = queryParams.get("page") || "1";
   const navigate = useNavigate();
+  const pageSize = 10;
 
-  // Fetch rows from the API
-  useEffect(() => {
-    const fetchRows = async () => {
-      try {
-        const response = await fetch(
-          `https://asset-management-system-2y9g.onrender.com/api/asset-out/?page=${
-            page || 1
-          }`
-        );
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        const mappedRows = data.results.map((item: any) => ({
+  // Fetch asset-out rows
+  const fetchRows = useCallback(async () => {
+    try {
+      const { data } = await api.get(ASSET_OUT_URL + `?page=${page}`);
+      setRows(
+        data.results.map((item: any) => ({
           id: item.Sn,
           Outdate: item.Outdate,
           DateToReturn: item.DateToReturn,
@@ -100,51 +91,42 @@ export default function AssetTable() {
           Remarks: item.Remarks,
           AssetDetail: item.AssetCodeName,
           OutTo: item.OutToName,
-        }));
-        setRows(mappedRows);
-        setPagination(data.pagination);
-      } catch (error) {
-        console.error("Error fetching rows:", error);
-      }
-    };
-    fetchRows();
+        }))
+      );
+      setPagination(data.pagination);
+    } catch (error) {
+      console.error("Error fetching asset-out rows:", error);
+    }
   }, [page]);
 
   // Fetch assets
-  useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const response = await fetch(
-          `https://asset-management-system-2y9g.onrender.com/api/asset-details/`
-        );
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        setAssets(data.results);
-      } catch (error) {
-        console.error("Error fetching assets:", error);
-      }
-    };
-    fetchAssets();
+  const fetchAssets = useCallback(async () => {
+    try {
+      const { data } = await api.get(ASSET_DETAILS_URL);
+      setAssets(data.results);
+    } catch (error) {
+      console.error("Error fetching assets:", error);
+    }
   }, []);
 
   // Fetch users
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(
-          "https://asset-management-system-2y9g.onrender.com/api/user/users/"
-        );
-        if (!response.ok)
-          throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        setUsers(Array.isArray(data.results) ? data.results : []);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-    fetchUsers();
+  const fetchUsers = useCallback(async () => {
+    try {
+      const { data } = await api.get(USERS_URL);
+      setUsers(Array.isArray(data.results) ? data.results : []);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchRows();
+  }, [fetchRows]);
+
+  useEffect(() => {
+    fetchAssets();
+    fetchUsers();
+  }, [fetchAssets, fetchUsers]);
 
   // Search filter
   useEffect(() => {
@@ -176,7 +158,6 @@ export default function AssetTable() {
       alert("Please fill all required fields.");
       return;
     }
-    // Map to API expected keys and types
     const apiPayload = {
       AssetDetail: Number(formData.AssetDetail),
       OutTo: Number(formData.OutTo),
@@ -187,22 +168,7 @@ export default function AssetTable() {
     };
 
     try {
-      const response = await fetch(
-        "https://asset-management-system-2y9g.onrender.com/api/asset-out/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(apiPayload),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error details:", errorData);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      let newRow: Row = await response.json();
+      const { data: newRow } = await api.post(ASSET_OUT_URL, apiPayload);
       newRow.OutTo = getUserName(newRow.OutTo, users);
       newRow.AssetDetail = getAssetCode(newRow.AssetDetail, assets);
 
@@ -221,6 +187,7 @@ export default function AssetTable() {
       alert("Failed to save data. Please try again.");
     }
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -242,12 +209,7 @@ export default function AssetTable() {
   // Delete row
   const handleDeleteRow = async (id: number) => {
     try {
-      const response = await fetch(
-        `https://asset-management-system-2y9g.onrender.com/api/asset-out/${id}/`,
-        { method: "DELETE" }
-      );
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+      await api.delete(`${ASSET_OUT_URL}${id}/`);
       setRows(rows.filter((row) => row.id !== id));
       setOpenMenu(null);
       window.alert("Row deleted successfully.");
@@ -255,11 +217,9 @@ export default function AssetTable() {
       console.error("Error deleting row:", error);
     }
   };
-  const pageSize = 10;
 
   // Inline edit handlers
   const handleEditRow = (row: Row) => {
-    // Find the user and asset IDs based on the display values
     const user = users.find(
       (u) =>
         `${u.first_name} ${u.last_name}`.trim() === row.OutTo ||
@@ -293,16 +253,10 @@ export default function AssetTable() {
       Remarks: editData.Remarks,
     };
     try {
-      const response = await fetch(
-        `https://asset-management-system-2y9g.onrender.com/api/asset-out/${editingId}/`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(apiPayload),
-        }
+      const { data: updatedRow } = await api.put(
+        `${ASSET_OUT_URL}${editingId}/`,
+        apiPayload
       );
-      if (!response.ok) throw new Error("Failed to update");
-      let updatedRow = await response.json();
       updatedRow.OutTo = getUserName(updatedRow.OutTo, users);
       updatedRow.AssetDetail = getAssetCode(updatedRow.AssetDetail, assets);
 
@@ -661,7 +615,7 @@ export default function AssetTable() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center py-4">
+                  <td colSpan={8} className="text-center py-4">
                     No data available.
                   </td>
                 </tr>
