@@ -128,6 +128,7 @@ export default function Assets() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const page = queryParams.get("page") || "1";
+
   const [pagination, setPagination] = useState<Pagination>({
     current_page: page ? parseInt(page) : 1,
   });
@@ -589,7 +590,8 @@ export default function Assets() {
                       </>
                     ) : (
                       <>
-                        <td className="px-6 py-4 text-sm text-teal-500 font-semibold">
+                        <td className="px-6 py-4 text-sm text-teal-500 font-semibold" onClick={()=>navigate(`/assets-details/${ asset.AssetId}`)}>
+                      
                           {asset.Name}
                         </td>
                         <td className="px-6 py-4 text-sm">{asset.Shortname}</td>

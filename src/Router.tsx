@@ -11,6 +11,7 @@ import AssetsOut from "./pages/AssetsOut";
 import AssetDetailsPage from "./features/assetsDetails/AssetDetailsPage";
 import NewUsers from "./Components/Register";
 import LogoutPage from "./Components/Logout";
+import SingleAssetsDetailsPage from "./features/assetsDetails/SingleAssetsDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -54,7 +55,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "/assets-details",
-        element: <AssetDetailsPage />,
+        children:[
+          {
+index: true,
+            element: <AssetDetailsPage />,
+          }
+          ,{
+            path: ":assetId",
+            element: <SingleAssetsDetailsPage/>
+          }
+        ]
       },
 
       {

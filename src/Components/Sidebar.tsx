@@ -11,7 +11,7 @@ import { RiLayoutGridLine } from "react-icons/ri";
 import { Link } from "react-router";
 
 import logo from "../assets/logo.png";
-import { RiAddLargeLine } from "react-icons/ri";
+import { RiAddLargeLine } from "react-icons/ri"; 
 
 const HamburgerIcon = () => (
   <span

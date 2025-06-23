@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
 import { BsThreeDotsVertical, BsCheck, BsX } from "react-icons/bs";
+import { api } from "@/lib/api";
 
 interface AssetDetails {
   Sn: number;
@@ -32,6 +33,13 @@ interface AssetDetailsResponse {
 
 const AssetDetailsPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const [searchTerm, setSearchTerm] = useState("");
+  const pageParam = queryParams.get("page") || "1";
+  const currentPage = pageParam ? parseInt(pageParam) : 1;
+  const filterName = queryParams.get("name") || "";
+
   const [assetData, setAssetData] = useState<AssetDetails[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
     current_page: 1,
@@ -43,48 +51,42 @@ const AssetDetailsPage: React.FC = () => {
   const [editData, setEditData] = useState<Partial<AssetDetails>>({});
   const [isDeleteConfirm, setIsDeleteConfirm] = useState<number | null>(null);
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const [searchTerm, setSearchTerm] = useState("");
-  const pageParam = queryParams.get("page") || "1";
-  const currentPage = pageParam ? parseInt(pageParam) : 1;
+  const fetchAssets = useCallback(async () => {
+    try {
+      const { data }: { data: AssetDetailsResponse } = await api.get(
+        `/asset-details/?page=${currentPage}`
+      );
+      
+      const filtered = filterName
+        ? data.results.filter(asset =>
+            asset.AssetName.toLowerCase().includes(filterName.toLowerCase())
+          )
+        : data.results;
+      setAssetData(filtered);
+      setPagination(data.pagination);
+    } catch (error) {
+      console.error("Error fetching asset details:", error);
+    }
+  }, [currentPage, filterName]);
 
   useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const response = await fetch(
-          `https://asset-management-system-2y9g.onrender.com/api/asset-details/?page=${currentPage}`
-          
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data: AssetDetailsResponse = await response.json();
-        setAssetData(data.results);
-        setPagination(data.pagination);
-      } catch (error) {
-        console.error("Error fetching assets:", error);
-      }
-    };
-
     fetchAssets();
-  }, [currentPage]);
+  }, [fetchAssets]);
 
   const nextPage = () => {
     if (!pagination.has_next) return;
     const nextPage = pagination.current_page + 1;
-    navigate(`/asset-details?page=${nextPage}`);
+    navigate(`/assets-details?page=${nextPage}${filterName ? `&name=${encodeURIComponent(filterName)}` : ""}`);
   };
 
   const prevPage = () => {
     if (!pagination.has_previous) return;
     const prevPage = pagination.current_page - 1;
-    navigate(`/asset-details?page=${prevPage}`);
+    navigate(`/assets-details?page=${prevPage}${filterName ? `&name=${encodeURIComponent(filterName)}` : ""}`);
   };
 
   const handleViewDetails = (assetId: number) => {
-    navigate(`/asset-details/${assetId}`);
+    navigate(`/assets-details/${assetId}`);
   };
 
   const startEditing = (asset: AssetDetails) => {
@@ -109,25 +111,13 @@ const AssetDetailsPage: React.FC = () => {
 
   const saveEditing = async (assetId: number) => {
     try {
-      const response = await fetch(
-        `https://asset-management-system-2y9g.onrender.com/api/asset-details/${assetId}/`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editData),
-        }
+      const { data } = await api.put(
+        `/asset-details/${assetId}/`,
+        editData
       );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const updatedAsset = await response.json();
       setAssetData(
         assetData.map((asset) =>
-          asset.Sn === assetId ? { ...asset, ...updatedAsset } : asset
+          asset.Sn === assetId ? { ...asset, ...data } : asset
         )
       );
       setEditingId(null);
@@ -139,17 +129,7 @@ const AssetDetailsPage: React.FC = () => {
 
   const handleDelete = async (assetId: number) => {
     try {
-      const response = await fetch(
-        `https://asset-management-system-2y9g.onrender.com/api/asset-details/${assetId}/`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+      await api.delete(`/asset-details/${assetId}/`);
       setAssetData(assetData.filter((asset) => asset.Sn !== assetId));
       setIsDeleteConfirm(null);
     } catch (error) {

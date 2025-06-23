@@ -4,6 +4,7 @@ import { CiSearch } from "react-icons/ci";
 import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { ModeToggle } from "../theme-switch";
+import { api } from "@/lib/api"; 
 
 type User = {
   name: string;
@@ -71,17 +72,17 @@ const Navbar = () => {
       return;
     }
     try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        "https://asset-management-system-2y9g.onrender.com/api/user/change-password/",
+
+      await api.post(
+        "user/change-password/",
         {
           old_password: oldPassword,
           new_password: newPassword,
+        
         },
         {
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -154,29 +155,29 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-gradient-to-r from-[#206D85] via-[#70C5AE] to-[#6DCC4E] py-4 shadow-md z-10">
-      <div className="max-w-screen-xl mx-auto px-4 flex justify-between items-center relative">
-        <div className="relative w-full max-w-md ">
+    <div className=" fixed top-0 w-full bg-gradient-to-r from-[#206D85] via-[#70C5AE] to-[#6DCC4E] py-2 shadow-md z-10">
+      <div className="max-w-screen-xl mx-auto flex justify-between items-center relative ">
+        <div className="relative w-full max-w-md mr-15 ">
           <CiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-xl pointer-events-none" />
           <input
             type="text"
             placeholder="Search"
-            className="w-75 border border-gray-100 pl-12 pr-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm text-white text-xl font-semibold bg-transparent"
+            className="w-75 border border-gray-100 pl-12 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm text-white text-xl font-semibold bg-transparent"
           />
         </div>
 
-        <div className="ml-4 relative flex items-center gap-3 text-white font-medium">
-          <ModeToggle />
-          <span>Welcome, {user?.name || "User"}</span>
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="p-1"
-          >
-            <FaChevronDown className="text-white text-sm" />
-          </button>
-
+       <div className="relative flex items-center gap-3 text-white font-medium ">
+  <ModeToggle />
+  <div
+    className="flex items-center cursor-pointer"
+    onClick={() => setShowDropdown(!showDropdown)}
+  >
+    <span className="mr-25">Welcome, {user?.name || "User"}</span>
+    <FaChevronDown className="text-white text-sm" />
+  </div>
+  {/* ...dropdown... */}
           {showDropdown && (
-            <div className="absolute right-0 top-14 w-64 bg-white text-black rounded-lg shadow-xl p-4 z-50 space-y-3">
+            <div className="absolute right-0 top-14 w-64 bg-white text-black rounded-lg shadow-xl  z-50 space-y-3 mr-10">
               <div className="border-b pb-2">
                 <p className="font-semibold">{user?.name}</p>
                 <p className="text-xs text-gray-500">{user?.email}</p>
@@ -261,13 +262,13 @@ const Navbar = () => {
 
               {showLogoutConfirm && !showChangePassword && !showUnableLogin && (
                 <div className="space-y-2 text-sm">
-                  <p className="text-gray-700">
+                  <p className="text-gray-700 pl-2">
                     Are you sure you want to logout?
                   </p>
                   <div className="flex gap-2">
                     <button
                       onClick={handleLogout}
-                      className="flex-1 bg-red-500 text-white py-1.5 rounded hover:bg-red-600"
+                      className="flex-1 bg-red-500 text-white py-1.5 rounded hover:bg-red-600 ml-2"
                     >
                       Yes
                     </button>
@@ -385,8 +386,11 @@ const Navbar = () => {
           )}
         </div>
       </div>
-    </div>
+</div>
+
+  
   );
 };
 
 export default Navbar;
+

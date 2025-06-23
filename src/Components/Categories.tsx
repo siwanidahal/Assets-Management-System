@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { CiSearch } from "react-icons/ci";
 import { IoArrowBack } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { api } from "@/lib/api";
 
 interface Category {
   id: number;
@@ -24,7 +25,7 @@ interface Pagination {
   total_pages?: number;
 }
 
-const CATEGORY_URL = "https://asset-management-system-2y9g.onrender.com/api/categories/";
+const CATEGORY_URL = "/categories/";
 
 export default function Categories() {
   const [categoryData, setCategoryData] = useState<Category[]>([]);
@@ -38,19 +39,22 @@ export default function Categories() {
     current_page: page ? parseInt(page) : 1,
   });
   const [openMenu, setOpenMenu] = useState<number | null>(null);
+
+  // Edit state
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+  const [editName, setEditName] = useState("");
+
+  // Add category inline form state
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [addError, setAddError] = useState("");
+
   const fetchCategories = useCallback(async () => {
     try {
-      const response = await fetch(CATEGORY_URL + `?page=${page}`);
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-      const data: CategoryResponse = await response.json();
-
-      const formattedData = data.results.map((item) => ({
-        id: item.id,
-        name: item.name,
-      }));
-
-      setCategoryData(formattedData);
+      const { data }: { data: CategoryResponse } = await api.get(
+        CATEGORY_URL + `?page=${page}`
+      );
+      setCategoryData(data.results);
       setPagination(data.pagination);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -60,6 +64,7 @@ export default function Categories() {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
+
   useEffect(() => {
     const closeMenu = () => setOpenMenu(null);
     document.addEventListener("click", closeMenu);
@@ -77,13 +82,133 @@ export default function Categories() {
     const nPage = pagination.current_page - 1;
     navigate(`/categories?page=${nPage}`);
   };
+
   const filteredCategory = categoryData.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Edit handlers
+  const startEdit = (category: Category) => {
+    setEditingCategoryId(category.id);
+    setEditName(category.name);
+    setOpenMenu(null);
+  };
+
+  const cancelEdit = () => {
+    setEditingCategoryId(null);
+    setEditName("");
+  };
+
+  const saveEdit = async (categoryId: number) => {
+    try {
+      await api.put(`/categories/${categoryId}/`, { name: editName });
+      setEditingCategoryId(null);
+      setEditName("");
+      fetchCategories();
+    } catch (error) {
+      console.error("Error updating category:", error);
+    }
+  };
+
+  // Delete handler
+  const deleteCategory = async (categoryId: number) => {
+    setOpenMenu(null);
+    if (!window.confirm("Are you sure you want to delete this category?")) return;
+    try {
+      await api.delete(`/categories/${categoryId}/`);
+      fetchCategories();
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    }
+  };
+
+  // Add category handler
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddError("");
+    if (!newCategoryName.trim()) {
+      setAddError("Category name is required.");
+      return;
+    }
+    try {
+      await api.post("/categories/", { name: newCategoryName.trim() });
+      setShowAddForm(false);
+      setNewCategoryName("");
+      fetchCategories();
+} catch (error: unknown) {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as { response?: unknown }).response === "object" &&
+    (error as { response?: unknown }).response !== null &&
+    "data" in (error as { response: Record<string, unknown> }).response
+  ) {
+    const errData = (error as { response: { data: { name?: string[]; detail?: string } } }).response.data;
+    setAddError(
+      errData.name?.[0] ||
+      errData.detail ||
+      "Failed to add category."
+    );
+  } else {
+    setAddError("Failed to add category.");
+  }
+}
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6 ">
       <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+        {/* Add Category Inline Form */}
+        <div className="flex justify-end mb-4">
+          {!showAddForm ? (
+            <button
+              onClick={() => {
+                setShowAddForm(true);
+                setNewCategoryName("");
+                setAddError("");
+              }}
+              className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 transition"
+            >
+              Add Category
+            </button>
+          ) : (
+            <form
+              onSubmit={handleAddCategory}
+              className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto"
+            >
+              <input
+                type="text"
+                placeholder="Category name"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                className="border px-3 py-2 rounded mb-2 sm:mb-0"
+                autoFocus
+              />
+              <button
+                type="submit"
+                className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 transition"
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAddForm(false);
+                  setNewCategoryName("");
+                  setAddError("");
+                }}
+                className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 transition"
+              >
+                Cancel
+              </button>
+              {addError && (
+                <span className="text-red-500 text-sm ml-2">{addError}</span>
+              )}
+            </form>
+          )}
+        </div>
+
         <div className="flex flex-col sm:flex-row justify-between items-center p-1">
           <div className="flex items-center ">
             <button
@@ -119,41 +244,83 @@ export default function Categories() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(categoryData) &&
-                filteredCategory.map((category) => (
-                  <tr key={category.id} className="border-b hover:bg-blue-50 ">
-                    <td className="px-6 py-4">{category.id}</td>
-                    <td className="px-6 py-4 text-teal-600 font-semibold">{category.name}</td>
-                    <td className="px-6 py-4 text-sm relative">
-                      <div className="relative inline-block text-left">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpenMenu(
-                              openMenu === category.id ? null : category.id
-                            );
-                          }}
-                          className="text-black focus:outline-none"
-                        >
-                          <BsThreeDotsVertical className="" />
-                        </button>
-                        {openMenu === category.id && (
-                          <div className="absolute left-0 mt-1 w-20 rounded shadow z-10 bg-white border text-xs ">
-                            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
-                              View
-                            </button>
-                            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
-                              Edit
-                            </button>
-                            <button className="block w-full text-left px-2 py-1 hover:bg-gray-100 text-red-500">
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+              {Array.isArray(categoryData) && filteredCategory.map((category) => (
+                <tr key={category.id} className="border-b hover:bg-blue-50 ">
+                  <td className="px-6 py-4">{category.id}</td>
+                  <td className="px-6 py-4 text-teal-600 font-semibold">
+                    {editingCategoryId === category.id ? (
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="border p-1 rounded"
+                        autoFocus
+                      />
+                    ) : (
+                      category.name
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-sm relative">
+                    <div className="relative inline-block text-left">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenMenu(
+                            openMenu === category.id ? null : category.id
+                          );
+                        }}
+                        className="text-black focus:outline-none"
+                      >
+                        <BsThreeDotsVertical className="" />
+                      </button>
+                      {openMenu === category.id && (
+                        <div className="absolute left-0 mt-1 w-24 rounded shadow z-10 bg-white border text-xs ">
+                          {editingCategoryId === category.id ? (
+                            <>
+                              <button
+                                className="block w-full text-left px-2 py-1 hover:bg-gray-100 text-green-600"
+                                onClick={() => saveEdit(category.id)}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                                onClick={cancelEdit}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                                onClick={() => {
+                                  // Placeholder for view logic
+                                  setOpenMenu(null);
+                                }}
+                              >
+                                View
+                              </button>
+                              <button
+                                className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                                onClick={() => startEdit(category)}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="block w-full text-left px-2 py-1 hover:bg-gray-100 text-red-500"
+                                onClick={() => deleteCategory(category.id)}
+                              >
+                                Delete
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

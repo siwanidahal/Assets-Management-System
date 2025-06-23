@@ -2,14 +2,16 @@ import { FormEvent, useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { LoaderIcon } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
+const [loading, setLoading] = useState(false);
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
+setLoading(true);
     const data = new FormData(e.currentTarget);
     const formData = {
       email: data.get("email"),
@@ -30,7 +32,8 @@ export default function Login() {
       if (response?.data?.token) {
         localStorage.setItem("token", JSON.stringify(response.data.token));
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        window.alert("Login Successful");
+        toast("Login Successful")
+
         navigate("/");
       }
 
@@ -38,6 +41,8 @@ export default function Login() {
     } catch (error) {
       console.error(error);
       window.alert("Login Failed");
+    } finally{
+      setLoading(false);
     }
   }
 
@@ -83,10 +88,11 @@ export default function Login() {
                 </span>
               </div>
               <button
+                disabled={loading}
                 type="submit"
-                className="bg-teal-500 text-white py-2 rounded font-semibold w-full hover:bg-white hover:border-2 hover:border-teal-400 hover:text-blue-500 transition"
+                className="bg-teal-500 space-x-4 text-white py-2 rounded font-semibold w-full hover:bg-white hover:border-2 hover:border-teal-400 hover:text-blue-500 transition"
               >
-                Submit
+              {loading&& <LoaderIcon className="animate-spin" />} Submit
               </button>
             </div>
           </div>

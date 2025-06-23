@@ -111,10 +111,10 @@ const Statistics = () => {
       <Navbar />
       {/* Top Controls */}
 
-      <div className="flex flex-col md:flex-row justify-between items-center mt-8 px-6 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center mt-20 px-6 gap-4">
         <span className="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2" />
 
-        <div className="flex gap-3">
+        <div className="flex gap-4">
           <input
             type="text"
             placeholder="Search activities..."
