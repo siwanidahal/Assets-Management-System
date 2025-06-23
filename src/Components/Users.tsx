@@ -379,6 +379,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { CiSearch } from "react-icons/ci";
+import { IoArrowBack } from "react-icons/io5";
 import { api } from "@/lib/api";
 
 interface Users {
@@ -453,6 +454,12 @@ export default function Users() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="flex flex-col sm:flex-row justify-between items-center p-6">
+          <button
+            onClick={() => navigate("/")}
+            className="mr-4 p-2 rounded-full bg-white shadow"
+          >
+            <IoArrowBack className="text-2xl text-black-500 font-light" />
+          </button>
           <h1 className="text-2xl font-bold text-teal-500 mb-4 sm:mb-0">
             Users Details
           </h1>
