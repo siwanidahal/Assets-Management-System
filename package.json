@@ -7,7 +7,7 @@
     "dev": "vite --port=3000  --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --port=3000"
   },
   "dependencies": {
     "@preline/theme-switch": "^3.0.0",
